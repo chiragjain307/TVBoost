@@ -40,7 +40,7 @@ minutes each, using the same script before and after: [benchmarks](benchmarks/).
 
 Honest notes: available RAM rose less than the raw savings suggest, because Android keeps more apps in real memory once it stops
 compressing them, which is why swap improved so much. Focus movement takes longer on the new launcher (416 ms against 250 ms), because the
-highlight glides instead of snapping. These numbers are for Design 1. Full results, including free RAM and app launch times, are in the
+highlight glides instead of snapping. These numbers are for Design 1 with 7 apps. Each app tile adds memory, and with 13 apps Design 2 measured 48 MB, about 6 MB above Design 1. Full results, including free RAM and app launch times, are in the
 [benchmark report](devices/i96-8k-hi3798mv300/benchmarks/README.md).
 
 ## What you get
@@ -62,10 +62,10 @@ highlight glides instead of snapping. These numbers are for Design 1. Full resul
 | Design 1, Home | Design 2, welcome screen |
 |---|---|
 | ![Design 1 home screen](designs/01-navy-gold/preview-home.jpg) | ![Design 2 welcome screen](designs/02-liquid-glass/preview-welcome.jpg) |
-| **Design 2, Home** | **Design 2, For You** (posters blurred here) |
-| ![Design 2 home screen](designs/02-liquid-glass/preview-home.jpg) | ![For You panel with four show posters](designs/02-liquid-glass/preview-for-you.jpg) |
-| **Stock Home, before** (thumbnails blurred) | **Screensaver** |
-| ![Stock home screen](assets/screenshots/i96-8k/i96-8k-stock-home-blurred.jpg) | ![Screensaver with the clock beside the logo](assets/screenshots/i96-8k/i96-8k-screensaver-v1.0.jpg) |
+| **Design 2, Home** (posters blurred here) | **Screensaver** |
+| ![Design 2 home screen with For You and renewals panels](designs/02-liquid-glass/preview-home.jpg) | ![Screensaver with the clock beside the logo](assets/screenshots/i96-8k/i96-8k-screensaver-v1.0.jpg) |
+| **Stock Home, before** (thumbnails blurred) | **Settings still work** |
+| ![Stock home screen](assets/screenshots/i96-8k/i96-8k-stock-home-blurred.jpg) | ![Settings panel](assets/screenshots/i96-8k/i96-8k-settings-v1.0.jpg) |
 
 All screenshots come from a real box. "YOUR LOGO" is a sample used only for these pictures. If you give no logo, that space stays empty.
 
@@ -126,7 +126,7 @@ choice is saved, so identical boxes can reuse it with `--saved-apps`. Nothing is
 | Design | Look |
 |---|---|
 | `01-navy-gold` | Clean and dark, with your logo centred on Home |
-| `02-liquid-glass` | Frosted glass, a welcome screen, renewals, and a For You panel on the Down key |
+| `02-liquid-glass` | Frosted glass, a welcome screen, and For You and renewals panels on Home |
 
 ```bash
 ./design.sh list                          # saved designs
@@ -148,9 +148,9 @@ once, and monthly or yearly dates roll forward by themselves.
 
 ## For You
 
-Press Down from the last row of apps, and a glass panel slides up with four popular shows. It keeps to the apps you have installed and favours
-the ones you open most. OK opens that app. Android does not let a launcher read your watch history or open a show directly, so this means popular
-on your apps, not picked from what you watched. With no internet it shows your four most-used apps instead.
+A slim glass panel under the clock shows four popular shows from the apps you have installed, favouring the ones you open most. Press Up from your
+apps to reach it, OK to open that app, and Down to go back. Android does not let a launcher read your watch history or open a show directly, so this
+means popular on your apps, not picked from what you watched. With no internet it shows your four most-used apps instead.
 
 ## Live data and privacy
 

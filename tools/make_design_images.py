@@ -198,18 +198,12 @@ def main():
         rgba, kind = source_pixels(logo_path)
         spec = apply_palette(spec, logo_colours(rgba))
         ready = prepared_logo(rgba, kind, rgb(spec["ink"]))
-        logo = fitted(ready, spec["logo_height"])
+        logo = fitted(ready, spec["logo_height"], spec.get("logo_max_width", 900))
         if spec.get("welcome_logo_height"):
             hero = fitted(ready, spec["welcome_logo_height"], 1000)
     out.mkdir(parents=True, exist_ok=True)
     picture(spec, spec["home_logo_center_y"], logo, spec.get("home_panels", ())).save(
         out / "wallpaper.jpg", quality=88, optimize=True)
-    if spec.get("for_you_panel"):
-        # The sheet slides over the dock, so its picture is the bottom of a plain wallpaper with one pane on it.
-        top = spec["for_you_top"]
-        pane = spec["for_you_panel"]
-        picture(spec, spec["home_logo_center_y"], None, [pane]).crop((0, top, W, H)).save(
-            out / "foryou.jpg", quality=88, optimize=True)
     picture(spec, spec["clock_logo_center_y"], logo).save(out / "clock.jpg", quality=88, optimize=True)
     if spec.get("welcome_panel"):
         # With a logo it is the hero of the screen, above a small pane. Without one, the pane takes the centre.

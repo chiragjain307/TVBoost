@@ -1,4 +1,4 @@
 Liquid glass: frosted panes over soft colour, a welcome screen, renewals and a For You panel
 Welcome: greeting with your name, date, time, temperature, sunrise and sunset. OK slides it up to Home.
-Home: your logo as large as Design 1, renewals at the top right and the dock. Down opens For You with four posters.
+Home: your logo as large as Design 1, For You under the clock, renewals at the top right, and one sideways row of apps.
 Live data comes through a small helper app that this design installs.

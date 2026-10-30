@@ -1,7 +1,7 @@
 # I96 8K benchmark report
 
 Measured with `benchmarks/measure.py`: 3 reboots, 5 idle minutes each, then `tools/bench.py` and cold app launches. Before is the box as it
-arrived. After is Design 1 on the finished build, with 19 apps disabled. Median, with the range in brackets.
+arrived. After is Design 1 with 7 apps on Home and 19 packages disabled. Median, with the range in brackets.
 
 ## Memory
 
@@ -19,6 +19,9 @@ RAM metrics are listed separately, because they mean different things.
 | Vendor agents PSS | 39,240 kB | 0 kB | -100% |
 
 Free RAM fell because Android keeps more in cache. Available RAM is the number that matters. Play Services grew because less of it sits in swap.
+
+Each app tile adds memory. With 13 apps on Home, Design 2's launcher measured 48 MB after 5 idle minutes, and right after a restart it measured about 6 MB
+above Design 1 with the same apps. Design 2 was not given the full 3-boot run.
 
 ## System
 

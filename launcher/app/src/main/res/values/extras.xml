@@ -6,7 +6,6 @@
     <string name="renews_title" translatable="false">RENEWS</string>
     <string name="renews_today" translatable="false">Today</string>
     <string name="for_you_title" translatable="false">For You</string>
-    <string name="for_you_shows_note" translatable="false">Popular on your apps. OK opens the app. Data: TVmaze</string>
-    <string name="for_you_peek" translatable="false">For You  ⌄</string>
+    <string name="for_you_shows_note" translatable="false">Popular on your apps · TVmaze</string>
     <string name="for_you_apps_note" translatable="false">Your most-used apps</string>
 </resources>

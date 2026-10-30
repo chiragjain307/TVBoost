@@ -38,5 +38,6 @@
   "glass_style": "glass",
   "welcome_screen": true,
   "renewals_panel": true,
-  "for_you_row": true
+  "for_you_row": true,
+  "single_row": true
 }

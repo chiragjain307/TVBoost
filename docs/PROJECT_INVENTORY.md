@@ -20,7 +20,7 @@ build, and optional parts can be turned off.
 | `launcher/app/src/main/java/com/tvboxrevive/home/` | Launcher source | Shared |
 | `.../ClockScene.java` | Screensaver, with the `clock.jpg` picture and the side-column clock | Shared |
 | `.../Config.java`, `res/values/config.xml` | Defaults that a design overrides | Shared |
-| `.../HomeExtras.java` | Welcome screen, renewals panel and For You sheet. Off unless a design asks | Optional |
+| `.../HomeExtras.java` | Welcome screen, renewals panel and For You panel. Off unless a design asks | Optional |
 | `.../Renewals.java`, `.../ForYou.java` | Renewal date logic and usage ranking | Optional |
 | `launcher/helper/` | Helper app: temperature and shows. Holds the only internet permission | Optional |
 | `launcher/app/src/test/` | 313 unit tests | Shared |

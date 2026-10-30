@@ -17,7 +17,8 @@ First public release.
 - Saved designs that switch in seconds: `01-navy-gold` and `02-liquid-glass`
 - A welcome screen with greeting, date, time, temperature, sunrise and sunset, which slides away on OK
 - A renewals panel with real app logos, and dates entered by the owner
-- A For You panel with four popular shows from the installed apps, on the Down key
+- A For You panel under the clock with four popular shows from the installed apps
+- All apps in one row that scrolls sideways, so nothing covers the logo or panels
 - A small helper app that holds the only internet access, so the launcher keeps none
 - Your own logo on Home and the screensaver, with the design's colours taken from it
 - A choice of which apps to keep before anything is disabled

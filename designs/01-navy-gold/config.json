@@ -34,5 +34,7 @@
   "advanced_effects": false,
   "home_idle_clock_minutes": 10,
   "clock_wallpaper": true,
-  "clock_wallpaper_dim": 30
+  "clock_wallpaper_dim": 30,
+  "single_row": true,
+  "dock_band_all": true
 }

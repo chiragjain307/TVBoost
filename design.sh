@@ -149,10 +149,8 @@ for ip in "$@"; do
   tools/theme.sh "$OUT" >/dev/null || { failed=1; continue; }
   put "$OUT/clock.jpg" clock.jpg || { failed=1; continue; }
   # theme.sh does not know these, and a design without one must not keep the last design's file.
-  for extra in welcome.jpg foryou.jpg; do
-    if [ -f "$OUT/$extra" ]; then put "$OUT/$extra" "$extra" || { failed=1; continue 2; }
-    else tv "rm -f $FILES/$extra"; fi
-  done
+  if [ -f "$OUT/welcome.jpg" ]; then put "$OUT/welcome.jpg" welcome.jpg || { failed=1; continue; }
+  else tv "rm -f $FILES/welcome.jpg"; fi
   if [ -n "$(spec renewals)" ] && [ -f "$HOME/.tvbox-revive/renewals.json" ]; then
     put "$HOME/.tvbox-revive/renewals.json" renewals.json || { failed=1; continue; }
   fi

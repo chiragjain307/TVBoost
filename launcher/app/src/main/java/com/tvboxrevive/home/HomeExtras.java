@@ -25,8 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,15 +51,13 @@ import java.util.Locale;
 final class HomeExtras {
     private static final String WELCOME_IMAGE = "welcome.jpg";
     private static final String RENEWALS_FILE = "renewals.json";
-    private static final String FOR_YOU_IMAGE = "foryou.jpg";
-    private static final int SHEET_HEIGHT_DP = 200;
     private static final Uri WEATHER = Uri.parse("content://com.tvboxrevive.helper/now");
     private static final Uri SHOWS = Uri.parse("content://com.tvboxrevive.helper/foryou");
     private static final long WELCOME_AGAIN_MS = 30 * 60_000L;
     private static final int RENEWALS_SHOWN = 3;
     private static final int FOR_YOU_SHOWN = 4;
-    private static final int POSTER_WIDTH_DP = 86;
-    private static final int POSTER_HEIGHT_DP = 126;
+    private static final int POSTER_WIDTH_DP = 58;
+    private static final int POSTER_HEIGHT_DP = 84;
     /** Streaming services, with their app on a TV and on a phone-style build, in the order to look for them. */
     private static final String[][] SERVICES = {
             {"Netflix", "com.netflix.ninja", "com.netflix.mediaclient"},
@@ -100,10 +96,6 @@ final class HomeExtras {
     private LinearLayout renewalsPanel;
     private LinearLayout forYouRow;
     private TextView forYouNote;
-    private FrameLayout forYouSheet;
-    private ImageView forYouPane;
-    private boolean sheetOpen;
-    private int columns = 6;
     private View lastGridFocus;
     private final Runnable tick = new Runnable() {
         @Override
@@ -134,7 +126,6 @@ final class HomeExtras {
         extras.longitude = json.optString("longitude", "");
         extras.unit = json.optString("temperature_unit", "c");
         extras.welcomeOn = wantsWelcome;
-        extras.columns = Math.max(1, json.optInt("columns", 6));
         extras.welcomeLogo = json.optBoolean("welcome_logo", false);
         if (wantsRenewals) extras.buildRenewals();
         if (wantsForYou) {
@@ -166,13 +157,6 @@ final class HomeExtras {
 
     void onPause() {
         leftAt = SystemClock.elapsedRealtime();
-        if (sheetOpen) {    // coming back, Home starts with the logo and the dock
-            sheetOpen = false;
-            forYouSheet.setVisibility(View.GONE);
-            forYouPane.setImageDrawable(null);
-            activity.findViewById(R.id.grid).setAlpha(1f);
-            if (lastGridFocus != null) lastGridFocus.requestFocus();
-        }
     }
 
     void onDestroy() {
@@ -199,38 +183,24 @@ final class HomeExtras {
         }
     }
 
-    /** Home's grid keeps Down inside itself, so Down from its last row opens the For You sheet here. */
+    /** Up from the apps reaches the panel under the clock, and Down comes back to the same app. */
     private boolean forYouKey(KeyEvent event) {
         if (forYouRow == null || event.getAction() != KeyEvent.ACTION_DOWN) return false;
         View focus = activity.getCurrentFocus();
+        if (focus == null) return false;
+        ViewGroup grid = activity.findViewById(R.id.grid);
         int key = event.getKeyCode();
-        if (sheetOpen) {
-            if (key != KeyEvent.KEYCODE_DPAD_UP && key != KeyEvent.KEYCODE_BACK) return false;
-            hideSheet();
-            ViewGroup grid = activity.findViewById(R.id.grid);
+        if (key == KeyEvent.KEYCODE_DPAD_UP && isInside(focus, grid) && forYouRow.getChildCount() > 0) {
+            lastGridFocus = focus;
+            forYouRow.getChildAt(0).requestFocus();
+            return true;
+        }
+        if (key == KeyEvent.KEYCODE_DPAD_DOWN && focus.getParent() == forYouRow) {
             if (lastGridFocus != null && lastGridFocus.isAttachedToWindow()) lastGridFocus.requestFocus();
             else grid.requestFocus();
             return true;
         }
-        if (focus == null || key != KeyEvent.KEYCODE_DPAD_DOWN) return false;
-        ViewGroup grid = activity.findViewById(R.id.grid);
-        if (isInside(focus, grid) && forYouRow.getChildCount() > 0 && onLastRow((RecyclerView) grid, focus)) {
-            lastGridFocus = focus;
-            showSheet();
-            forYouRow.getChildAt(0).requestFocus();
-            return true;
-        }
         return false;
-    }
-
-    /** Extra apps wrap into rows under the dock, and Down has to reach them before it opens the sheet. */
-    private boolean onLastRow(RecyclerView grid, View focus) {
-        View item = grid.findContainingItemView(focus);
-        RecyclerView.Adapter<?> adapter = grid.getAdapter();
-        if (item == null || adapter == null) return true;
-        int position = grid.getChildAdapterPosition(item);
-        int count = adapter.getItemCount();
-        return position / columns >= (count - 1) / columns;
     }
 
     private static boolean isInside(View view, View ancestor) {
@@ -510,80 +480,31 @@ final class HomeExtras {
 
     // ---- For You row ------------------------------------------------------------------------------
 
-    /** A glass sheet below the screen: the large logo keeps Home to itself until Down brings the sheet up. */
+    /** A slim glass panel under the clock. Apps scroll sideways in one row, so nothing rises up to meet it. */
     private void buildForYou() {
-        ViewGroup root = activity.findViewById(R.id.root);
-        forYouSheet = new FrameLayout(activity);
-        forYouSheet.setBackgroundColor(0xFF090C14);
-        forYouSheet.setClipChildren(false);
-        forYouPane = new ImageView(activity);
-        forYouPane.setScaleType(ImageView.ScaleType.FIT_XY);
-        forYouSheet.addView(forYouPane, new FrameLayout.LayoutParams(-1, -1));
-        LinearLayout section = new LinearLayout(activity);
-        section.setOrientation(LinearLayout.VERTICAL);
-        section.setPadding(dp(82), dp(29), dp(82), dp(14));
-        section.setClipChildren(false);
-        section.setClipToPadding(false);
+        LinearLayout panel = new LinearLayout(activity);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setPadding(dp(10), dp(8), dp(10), dp(10));
+        panel.setBackground(glass(dp(14)));
+        panel.setClipChildren(false);
+        panel.setClipToPadding(false);
         LinearLayout heading = new LinearLayout(activity);
         heading.setGravity(Gravity.BOTTOM);
-        TextView title = text(15, 0xFFFFFFFF, R.font.outfit_medium);
+        TextView title = text(11, 0xFFFFFFFF, R.font.outfit_medium);
         title.setText(R.string.for_you_title);
-        forYouNote = text(10, 0x99FFFFFF, R.font.outfit_medium);
-        forYouNote.setPadding(dp(10), 0, 0, dp(1));
+        forYouNote = text(8, 0x99FFFFFF, R.font.outfit_medium);
+        forYouNote.setPadding(dp(7), 0, 0, dp(1));
         heading.addView(title);
         heading.addView(forYouNote);
-        heading.setPadding(0, 0, 0, dp(7));
-        section.addView(heading);
+        heading.setPadding(0, 0, 0, dp(6));
+        panel.addView(heading);
         forYouRow = new LinearLayout(activity);
         forYouRow.setClipChildren(false);    // a focused tile grows past its row
-        forYouRow.setGravity(Gravity.CENTER_HORIZONTAL);
-        section.addView(forYouRow, new LinearLayout.LayoutParams(-1, -2));
-        forYouSheet.addView(section, new FrameLayout.LayoutParams(-1, -1));
-        FrameLayout.LayoutParams bottom = new FrameLayout.LayoutParams(-1, dp(SHEET_HEIGHT_DP), Gravity.BOTTOM);
-        forYouSheet.setVisibility(View.GONE);
-        root.addView(forYouSheet, bottom);
-
-        TextView peek = text(10, 0xE6FFFFFF, R.font.outfit_medium);
-        peek.setText(R.string.for_you_peek);
-        peek.setPadding(dp(11), dp(3), dp(11), dp(4));
-        GradientDrawable pill = new GradientDrawable();
-        pill.setCornerRadius(dp(11));
-        pill.setColor(0x99000000);
-        peek.setBackground(pill);
-        FrameLayout.LayoutParams under = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-        under.bottomMargin = dp(10);
-        root.addView(peek, under);
-    }
-
-    /** The pane is only in memory while the sheet is up, and 16-bit, like the wallpaper. */
-    private void loadSheetPane() {
-        File dir = Config.dir(activity);
-        File art = dir == null ? null : new File(dir, FOR_YOU_IMAGE);
-        if (art == null || !art.isFile()) return;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        forYouPane.setImageBitmap(BitmapFactory.decodeFile(art.getPath(), options));
-    }
-
-    private void showSheet() {
-        loadSheetPane();
-        forYouSheet.setVisibility(View.VISIBLE);
-        forYouSheet.bringToFront();
-        forYouSheet.setTranslationY(dp(SHEET_HEIGHT_DP));
-        forYouSheet.animate().translationY(0).setDuration(280).withLayer().start();
-        // The tiles step aside, so the sheet and the logo have the screen to themselves.
-        activity.findViewById(R.id.grid).animate().alpha(0f).setDuration(160).start();
-        sheetOpen = true;
-    }
-
-    private void hideSheet() {
-        sheetOpen = false;
-        activity.findViewById(R.id.grid).animate().alpha(1f).setDuration(200).start();
-        forYouSheet.animate().translationY(dp(SHEET_HEIGHT_DP)).setDuration(220).withLayer()
-                .withEndAction(() -> {
-                    forYouSheet.setVisibility(View.GONE);
-                    forYouPane.setImageDrawable(null);
-                }).start();
+        panel.addView(forYouRow);
+        FrameLayout.LayoutParams corner = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.START);
+        corner.leftMargin = dp(57);
+        corner.topMargin = dp(108);
+        ((ViewGroup) activity.findViewById(R.id.root)).addView(panel, corner);
     }
 
     private List<String> launchable() {
@@ -673,14 +594,13 @@ final class HomeExtras {
     private void addTile(View tile, int width, int height, Runnable open) {
         tile.setFocusable(true);
         tile.setOnFocusChangeListener((view, focused) -> {
-            view.animate().scaleX(focused ? 1.07f : 1f).scaleY(focused ? 1.07f : 1f).setDuration(120).start();
+            view.animate().scaleX(focused ? 1.1f : 1f).scaleY(focused ? 1.1f : 1f).setDuration(120).start();
             view.setElevation(focused ? dp(6) : 0);
             view.setForeground(focused ? focusRim() : null);
         });
         tile.setOnClickListener(view -> open.run());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
-        params.leftMargin = dp(12);
-        params.rightMargin = dp(12);
+        if (forYouRow.getChildCount() > 0) params.leftMargin = dp(7);
         forYouRow.addView(tile, params);
     }
 
@@ -693,7 +613,7 @@ final class HomeExtras {
             ImageView tile = new ImageView(activity);
             tile.setScaleType(ImageView.ScaleType.FIT_CENTER);
             tile.setPadding(dp(4), dp(4), dp(4), dp(4));
-            tile.setBackground(glass(dp(10)));
+            tile.setBackground(glass(dp(7)));
             try {
                 Drawable art = pm.getApplicationBanner(pkg);
                 tile.setImageDrawable(art != null ? art : pm.getApplicationIcon(pkg));
@@ -701,7 +621,7 @@ final class HomeExtras {
             } catch (PackageManager.NameNotFoundException e) {
                 continue;
             }
-            addTile(tile, dp(POSTER_WIDTH_DP + 44), dp(POSTER_HEIGHT_DP), () -> open(pkg));
+            addTile(tile, dp(POSTER_WIDTH_DP), dp(POSTER_HEIGHT_DP), () -> open(pkg));
         }
     }
 
@@ -718,20 +638,20 @@ final class HomeExtras {
             poster.setOutlineProvider(new android.view.ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, android.graphics.Outline outline) {
-                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), dp(10));
+                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), dp(7));
                 }
             });
             poster.setClipToOutline(true);
             tile.addView(poster, new FrameLayout.LayoutParams(-1, -1));
-            TextView rating = text(9, 0xFFFFFFFF, R.font.outfit_medium);
+            TextView rating = text(7, 0xFFFFFFFF, R.font.outfit_medium);
             rating.setText(show.rating);
-            rating.setPadding(dp(5), dp(1), dp(5), dp(1));
+            rating.setPadding(dp(3), 0, dp(3), 0);
             GradientDrawable chip = new GradientDrawable();
             chip.setCornerRadius(dp(8));
             chip.setColor(0xB3000000);
             rating.setBackground(chip);
             FrameLayout.LayoutParams corner = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END);
-            corner.setMargins(0, 0, dp(5), dp(5));
+            corner.setMargins(0, 0, dp(3), dp(3));
             tile.addView(rating, corner);
             addTile(tile, dp(POSTER_WIDTH_DP), dp(POSTER_HEIGHT_DP), () -> open(show.pkg));
         }
@@ -762,7 +682,7 @@ final class HomeExtras {
 
     private Drawable focusRim() {
         GradientDrawable d = new GradientDrawable();
-        d.setCornerRadius(dp(10));
+        d.setCornerRadius(dp(7));
         d.setStroke(dp(2), 0xFFFFFFFF);
         return d;
     }
