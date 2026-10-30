@@ -1,0 +1,21 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No private data
+        run: tools/check_public.sh
+      - name: Scripts parse
+        run: for f in *.sh tools/*.sh launcher/build-and-install.sh; do bash -n "$f"; done
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Launcher tests and build
+        working-directory: launcher
+        run: ./gradlew testReleaseUnitTest assembleRelease --console=plain

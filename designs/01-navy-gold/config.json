@@ -1,0 +1,38 @@
+{
+  "dock_apps": [
+    "com.google.android.youtube.tv",
+    "com.netflix.ninja",
+    "com.netflix.mediaclient",
+    "com.amazon.amazonvideo.livingroom",
+    "in.startv.hotstar",
+    "com.android.vending",
+    "com.android.chrome"
+  ],
+  "library_apps": [
+    "com.netflix.mediaclient",
+    "com.android.chrome"
+  ],
+  "hidden_apps": [
+    "com.android.tv.settings",
+    "com.purefusionatv.appdraweratv",
+    "com.hisilicon.android.music",
+    "com.hisilicon.higallery",
+    "com.dyos.factorytest"
+  ],
+  "columns": 6,
+  "background_color": "#090C14",
+  "wallpaper": true,
+  "cinematic_home": false,
+  "dock_title": false,
+  "dock_glass": true,
+  "dock_opacity": 65,
+  "icon_only_buttons": true,
+  "ambient_glow": false,
+  "app_glow": false,
+  "glow_style": "off",
+  "focus_overshoot": false,
+  "advanced_effects": false,
+  "home_idle_clock_minutes": 10,
+  "clock_wallpaper": true,
+  "clock_wallpaper_dim": 30
+}

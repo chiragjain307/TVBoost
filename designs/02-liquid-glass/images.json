@@ -1,0 +1,49 @@
+{
+  "style": "liquid",
+  "background": "#0A0F24",
+  "glow": "#2B4CC2",
+  "glow2": "#7A3FC9",
+  "ink": "#FFFFFF",
+  "logo_height": 560,
+  "welcome_logo_height": 470,
+  "home_logo_center_y": 372,
+  "clock_logo_center_y": 540,
+  "welcome_logo_center_y": 320,
+  "welcome_panel": [
+    390,
+    270,
+    1530,
+    830,
+    56
+  ],
+  "home_panels": [
+    [
+      113,
+      765,
+      1805,
+      950,
+      44
+    ]
+  ],
+  "asks": [
+    "name",
+    "city"
+  ],
+  "renewals": true,
+  "welcome_panel_logo": [
+    430,
+    624,
+    1490,
+    884,
+    48
+  ],
+  "helper": true,
+  "for_you_top": 680,
+  "for_you_panel": [
+    113,
+    700,
+    1807,
+    1056,
+    44
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "i96-8k-hi3798mv300",
+  "name": "I96 8K Android TV box",
+  "status": "verified",
+  "match": {
+    "ro.build.display.id": "I96_8K-20251222-301SMSX300",
+    "ro.hisilicon.product": "Hi3798MV300",
+    "ro.build.version.sdk": "28"
+  },
+  "adb_port": 3222,
+  "stock_launcher": "com.google.android.tvlauncher",
+  "box_label": {
+    "android": "14",
+    "resolution": "8K Ultra HD",
+    "manufacturer_property": "AMLOGIC"
+  },
+  "actual": {
+    "android": "9",
+    "sdk": 28,
+    "security_patch": "2019-03-05",
+    "build_type": "userdebug, test-keys",
+    "soc": "HiSilicon Hi3798MV300",
+    "cpu": "4 x Cortex-A53, 32-bit userspace (armeabi-v7a)",
+    "gpu": "Mali-450 MP, OpenGL ES 2.0",
+    "ram_reported_kb": 1048576,
+    "zram_kb": 596428,
+    "data_gb": 3.9,
+    "display": "1920x1080 at 60 Hz, density 320",
+    "root": "not used",
+    "wifi": true,
+    "ethernet": false,
+    "bluetooth_remote": true
+  },
+  "dns": {
+    "mode": "hostname",
+    "specifier": "dns.adguard-dns.com"
+  }
+}

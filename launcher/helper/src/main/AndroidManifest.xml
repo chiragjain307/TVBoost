@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The only part of this project with internet access, and only designs that show live data install it. It has
+     no screen and no background service: it runs when the launcher asks, then Android reclaims it. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application android:allowBackup="false" android:label="TVBox Revive Helper">
+        <provider
+            android:name=".HelperProvider"
+            android:authorities="com.tvboxrevive.helper"
+            android:exported="true" />
+    </application>
+</manifest>

@@ -1,0 +1,37 @@
+# Build output
+launcher/.gradle/
+launcher/build/
+launcher/app/build/
+launcher/helper/build/
+launcher/local.properties
+*.apk
+*.aab
+
+# Python
+tools/venv/
+__pycache__/
+*.pyc
+
+# ADB keys and signing keys
+tools/adbkey/
+adbkey
+adbkey.pub
+*.keystore
+*.jks
+
+# Test runs hold logs from a real box, which can include private details
+benchmarks/runs/
+*.log
+.env
+.env.*
+
+# Logos belong to each user and stay on their own computer
+*logo*.jpg
+*logo*.jpeg
+*logo*.png
+*logo*.webp
+*logo*.svg
+!assets/branding/sample-logo.png
+
+# macOS
+.DS_Store

@@ -1,0 +1,269 @@
+{
+  "note": "Medians with range and n from benchmarks/measure.py. Process-level and host-specific raw data is left out on purpose.",
+  "before": {
+    "adb_s": {
+      "median": 37.4,
+      "min": 36.6,
+      "max": 37.9,
+      "n": 3
+    },
+    "boot_completed_s": {
+      "median": 38.1,
+      "min": 37.2,
+      "max": 38.7,
+      "n": 3
+    },
+    "home_resumed_s": {
+      "median": 38.9,
+      "min": 38.0,
+      "max": 39.3,
+      "n": 3
+    },
+    "uptime_at_home_s": {
+      "median": 32.27,
+      "min": 31.51,
+      "max": 32.72,
+      "n": 3
+    },
+    "boot_progress_enable_screen_ms": {
+      "median": 19215,
+      "min": 19077,
+      "max": 19296,
+      "n": 3
+    },
+    "MemTotal_kB": {
+      "median": 1048576,
+      "min": 1048576,
+      "max": 1048576,
+      "n": 3
+    },
+    "MemAvailable_kB": {
+      "median": 460392,
+      "min": 419040,
+      "max": 473012,
+      "n": 3
+    },
+    "MemFree_kB": {
+      "median": 185444,
+      "min": 176844,
+      "max": 185760,
+      "n": 3
+    },
+    "Cached_kB": {
+      "median": 357344,
+      "min": 319464,
+      "max": 376072,
+      "n": 3
+    },
+    "SwapFree_kB": {
+      "median": 426312,
+      "min": 420316,
+      "max": 457752,
+      "n": 3
+    },
+    "launcher_pss_kb": {
+      "median": 54171,
+      "min": 44966,
+      "max": 57290,
+      "n": 3
+    },
+    "gms_pss_kb": {
+      "median": 107439,
+      "min": 106630,
+      "max": 113327,
+      "n": 3
+    },
+    "suspect_pss_kb": {
+      "median": 39240,
+      "min": 38588,
+      "max": 44114,
+      "n": 3
+    },
+    "userland_processes": {
+      "median": 100,
+      "min": 94,
+      "max": 101,
+      "n": 3
+    },
+    "app_processes": {
+      "median": 34,
+      "min": 27,
+      "max": 34,
+      "n": 3
+    },
+    "lru_procs": {
+      "median": 28,
+      "min": 21,
+      "max": 28,
+      "n": 3
+    },
+    "cpu_busy_pct": {
+      "median": 6.8,
+      "min": 6.0,
+      "max": 17.5,
+      "n": 3
+    },
+    "cpu_iowait_pct": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.4,
+      "n": 3
+    },
+    "app_launch_total_ms": {
+      "com.android.tv.settings": {
+        "median": 894,
+        "min": 737,
+        "max": 915,
+        "n": 3
+      },
+      "com.google.android.youtube.tv": {
+        "median": 3585,
+        "min": 2353,
+        "max": 3600,
+        "n": 3
+      },
+      "com.amazon.amazonvideo.livingroom": {
+        "median": 1414,
+        "min": 1405,
+        "max": 1473,
+        "n": 3
+      }
+    }
+  },
+  "after": {
+    "adb_s": {
+      "median": 36.8,
+      "min": 35.3,
+      "max": 37.0,
+      "n": 3
+    },
+    "boot_completed_s": {
+      "median": 37.4,
+      "min": 35.8,
+      "max": 37.7,
+      "n": 3
+    },
+    "home_resumed_s": {
+      "median": 38.1,
+      "min": 36.5,
+      "max": 38.3,
+      "n": 3
+    },
+    "uptime_at_home_s": {
+      "median": 31.5,
+      "min": 29.92,
+      "max": 31.56,
+      "n": 3
+    },
+    "boot_progress_enable_screen_ms": {
+      "median": 19418,
+      "min": 18813,
+      "max": 19590,
+      "n": 3
+    },
+    "MemTotal_kB": {
+      "median": 1048576,
+      "min": 1048576,
+      "max": 1048576,
+      "n": 3
+    },
+    "MemAvailable_kB": {
+      "median": 494044,
+      "min": 488436,
+      "max": 494964,
+      "n": 3
+    },
+    "MemFree_kB": {
+      "median": 177480,
+      "min": 176372,
+      "max": 180288,
+      "n": 3
+    },
+    "Cached_kB": {
+      "median": 395064,
+      "min": 392112,
+      "max": 396892,
+      "n": 3
+    },
+    "SwapFree_kB": {
+      "median": 558196,
+      "min": 558008,
+      "max": 559980,
+      "n": 3
+    },
+    "launcher_pss_kb": {
+      "median": 19816,
+      "min": 19606,
+      "max": 21754,
+      "n": 3
+    },
+    "gms_pss_kb": {
+      "median": 119886,
+      "min": 119548,
+      "max": 119924,
+      "n": 3
+    },
+    "suspect_pss_kb": {
+      "median": 0,
+      "min": 0,
+      "max": 0,
+      "n": 3
+    },
+    "userland_processes": {
+      "median": 96,
+      "min": 95,
+      "max": 96,
+      "n": 3
+    },
+    "app_processes": {
+      "median": 29,
+      "min": 29,
+      "max": 29,
+      "n": 3
+    },
+    "lru_procs": {
+      "median": 23,
+      "min": 23,
+      "max": 23,
+      "n": 3
+    },
+    "cpu_busy_pct": {
+      "median": 5.4,
+      "min": 4.6,
+      "max": 5.4,
+      "n": 3
+    },
+    "cpu_iowait_pct": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "n": 3
+    },
+    "app_launch_total_ms": {
+      "com.android.tv.settings": {
+        "median": 606,
+        "min": 593,
+        "max": 880,
+        "n": 3
+      },
+      "com.google.android.youtube.tv": {
+        "median": 2957,
+        "min": 2672,
+        "max": 3029,
+        "n": 3
+      },
+      "com.netflix.mediaclient": {
+        "median": 2830,
+        "min": 2524,
+        "max": 2918,
+        "n": 3
+      },
+      "com.amazon.amazonvideo.livingroom": {
+        "median": 1404,
+        "min": 1269,
+        "max": 1420,
+        "n": 3
+      }
+    }
+  }
+}

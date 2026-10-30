@@ -1,0 +1,169 @@
+{
+  "device": "i96-8k-hi3798mv300",
+  "android_versions": [
+    "9 (SDK 28)"
+  ],
+  "root_required": false,
+  "action": "pm disable-user --user 0",
+  "note": "RAM impact is the process's measured PSS in MB at idle on the stock setup. null means it was not among the top processes, so its saving was not measured separately. Available RAM does not rise by these exact amounts.",
+  "packages": [
+    {
+      "package": "com.lz.sysplugin",
+      "reason": "Vendor background agent. Keeps a connection to a vendor server, reads device identifiers and installs apps without asking",
+      "ram_mb_measured": 31.3,
+      "side_effects": "Possibly the vendor's only firmware update route",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.lz.sysplugin"
+    },
+    {
+      "package": "com.android.tvh",
+      "reason": "Advertising app, installed in the background by the agent above",
+      "ram_mb_measured": 7.2,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.android.tvh"
+    },
+    {
+      "package": "com.google.android.tvrecommendations",
+      "reason": "Recommendation rows for the stock launcher",
+      "ram_mb_measured": 13.6,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.tvrecommendations"
+    },
+    {
+      "package": "com.google.android.partnersetup",
+      "reason": "Partner attribution",
+      "ram_mb_measured": 4.6,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.partnersetup"
+    },
+    {
+      "package": "com.google.android.backdrop",
+      "reason": "Ambient screensaver, replaced by the launcher's clock",
+      "ram_mb_measured": null,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.backdrop"
+    },
+    {
+      "package": "com.google.android.onetimeinitializer",
+      "reason": "First-boot setup, already finished",
+      "ram_mb_measured": null,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.onetimeinitializer"
+    },
+    {
+      "package": "com.android.printspooler",
+      "reason": "Printing, no printer on a TV box",
+      "ram_mb_measured": null,
+      "side_effects": "No printing",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.android.printspooler"
+    },
+    {
+      "package": "com.android.providers.calendar",
+      "reason": "Calendar storage, unused on a TV box",
+      "ram_mb_measured": 5.0,
+      "side_effects": "No calendar data",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.android.providers.calendar"
+    },
+    {
+      "package": "com.google.android.syncadapters.contacts",
+      "reason": "Contacts sync, unused on a TV box",
+      "ram_mb_measured": null,
+      "side_effects": "No contacts sync",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.syncadapters.contacts"
+    },
+    {
+      "package": "com.android.dreams.basic",
+      "reason": "Basic screensaver, replaced by the launcher's clock",
+      "ram_mb_measured": null,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.android.dreams.basic"
+    },
+    {
+      "package": "com.android.wallpaperbackup",
+      "reason": "Wallpaper backup, unused",
+      "ram_mb_measured": null,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.android.wallpaperbackup"
+    },
+    {
+      "package": "com.android.htmlviewer",
+      "reason": "HTML viewer",
+      "ram_mb_measured": null,
+      "side_effects": "Licence pages in Settings may not open",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.android.htmlviewer"
+    },
+    {
+      "package": "com.google.android.landscape",
+      "reason": "Wallpaper pack",
+      "ram_mb_measured": null,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.landscape"
+    },
+    {
+      "package": "com.hisilicon.android.music",
+      "reason": "Local music player",
+      "ram_mb_measured": null,
+      "side_effects": "No local music app",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.hisilicon.android.music"
+    },
+    {
+      "package": "com.hisilicon.higallery",
+      "reason": "Local photo gallery",
+      "ram_mb_measured": null,
+      "side_effects": "No local gallery app",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.hisilicon.higallery"
+    },
+    {
+      "package": "com.google.android.tvlauncher",
+      "reason": "Stock Home with sponsored rows, replaced by the new launcher",
+      "ram_mb_measured": 54.2,
+      "side_effects": "Stock Home is gone until undo",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.tvlauncher"
+    },
+    {
+      "package": "com.google.android.leanbacklauncher",
+      "reason": "Older stock launcher",
+      "ram_mb_measured": 4.3,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.leanbacklauncher"
+    },
+    {
+      "package": "com.purefusionatv.appdraweratv",
+      "reason": "App drawer, replaced by the Home dock and grid",
+      "ram_mb_measured": null,
+      "side_effects": "No separate app drawer",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.purefusionatv.appdraweratv"
+    },
+    {
+      "package": "com.google.android.atv.widget",
+      "reason": "Clock widget for the stock launcher",
+      "ram_mb_measured": null,
+      "side_effects": "None seen",
+      "reversible": true,
+      "restore": "pm enable --user 0 com.google.android.atv.widget"
+    }
+  ],
+  "kept_on_purpose": {
+    "com.android.chrome": "Owner request, stays on the dock",
+    "com.google.android.katniss": "Voice search. Its background process stays, because stopping it makes the voice key crash the foreground app",
+    "com.google.android.gms": "Google Play Services",
+    "com.android.vending": "Play Store"
+  }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_hint" translatable="false">Press OK to continue</string>
+    <string name="sunrise_at" translatable="false">Sunrise %1$s</string>
+    <string name="sunset_at" translatable="false">Sunset %1$s</string>
+    <string name="renews_title" translatable="false">RENEWS</string>
+    <string name="renews_today" translatable="false">Today</string>
+    <string name="for_you_title" translatable="false">For You</string>
+    <string name="for_you_shows_note" translatable="false">Popular on your apps. OK opens the app. Data: TVmaze</string>
+    <string name="for_you_peek" translatable="false">For You  ⌄</string>
+    <string name="for_you_apps_note" translatable="false">Your most-used apps</string>
+</resources>

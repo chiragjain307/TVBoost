@@ -1,0 +1,23 @@
+# I96 8K, HiSilicon Hi3798MV300, Android 9. Packages disabled by this profile, in the order applied.
+# Vendor background agents. sysplugin goes first so it cannot react to tvh going away.
+com.lz.sysplugin
+com.android.tvh
+# Google content and unused leftovers.
+com.google.android.tvrecommendations
+com.google.android.partnersetup
+com.google.android.backdrop
+com.google.android.onetimeinitializer
+com.android.printspooler
+com.android.providers.calendar
+com.google.android.syncadapters.contacts
+com.android.dreams.basic
+com.android.wallpaperbackup
+com.android.htmlviewer
+com.google.android.landscape
+com.hisilicon.android.music
+com.hisilicon.higallery
+# Stock Home and its helpers. install.sh hands Home to the new launcher before these are disabled.
+com.google.android.tvlauncher
+com.google.android.leanbacklauncher
+com.purefusionatv.appdraweratv
+com.google.android.atv.widget
