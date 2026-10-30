@@ -44,9 +44,21 @@ def find_city(name):
     return results[0] if results else None
 
 
+def detect_city():
+    """A guess from this computer's internet connection, offered as the default and never used unconfirmed: these
+    boxes have no GPS, and a connection can resolve to a city over 100 km away."""
+    request = urllib.request.Request("https://ipapi.co/json/", headers={"User-Agent": "tvbox-revive"})
+    try:
+        with urllib.request.urlopen(request, timeout=6) as reply:
+            return json.load(reply).get("city") or ""
+    except (OSError, ValueError):
+        return ""
+
+
 def ask_city(profile):
+    suggested = profile.get("city") or detect_city()
     while True:
-        city = ask("City for the temperature and sun times", profile.get("city", ""))
+        city = ask("City for the temperature and sun times, Enter to accept", suggested)
         if not city:
             return
         if city == profile.get("city") and profile.get("latitude"):

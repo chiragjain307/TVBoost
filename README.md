@@ -141,7 +141,7 @@ baked into the pictures on your computer, because budget GPUs cannot blur live, 
 
 The launcher has no internet permission in any design. Design 2 installs a separate 11 KB helper that holds the only internet access. It has no
 screen and no background service, and it asks [Open-Meteo](https://open-meteo.com/) for the temperature at your city's coordinates, at most every 30
-minutes, and only while the welcome screen is showing. Sunrise and sunset are calculated on the device. Open-Meteo's free service is for
+minutes, and only while the welcome screen is showing. Sunrise and sunset are calculated on the device. The installer suggests a city from your internet connection through ipapi.co, which you can accept or change, because these boxes have no GPS. Open-Meteo's free service is for
 non-commercial use, so check its terms before using this in a business.
 
 The RAM and storage tile updates only while Home is on screen. It reads storage from the system's `df` tool, because one tested box reports
