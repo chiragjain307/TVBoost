@@ -31,12 +31,10 @@
   "glow_style": "off",
   "focus_overshoot": false,
   "advanced_effects": false,
-  "home_idle_clock_minutes": 10,
-  "clock_wallpaper": true,
-  "clock_wallpaper_dim": 30,
   "dock_band": false,
   "glass_style": "glass",
   "welcome_screen": true,
   "single_row": true,
-  "system_tile": true
+  "system_tile": true,
+  "welcome_idle_minutes": 10
 }

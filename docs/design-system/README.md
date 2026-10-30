@@ -35,7 +35,7 @@ date use wide letter spacing in capitals.
 |---|---|---|
 | Dock tile | Grows and lifts on focus, banner or icon with name | `launcher/.../AppAdapter.java` |
 | Top buttons | Round icon-only buttons | `launcher/.../MainActivity.java` |
-| Screensaver | Starts after 10 idle minutes, any key returns to Home | `launcher/.../ClockActivity.java`, `ClockScene.java` |
+| Screensaver (Design 1) | Starts after 10 idle minutes, any key returns to Home | `launcher/.../ClockActivity.java`, `ClockScene.java` |
 | Clock on the screensaver | Moves each minute, keeps to the side columns when `clock.jpg` is present | `ClockScene.java` |
 
 ## Motion and navigation
@@ -56,6 +56,7 @@ date use wide letter spacing in capitals.
 | Dock pane | x 113 to 1805, y 826 to 1006, radius 44, set in `images.json` |
 | App row | One row that scrolls sideways, so tiles never rise over the logo |
 | Home logo | The same size and place as Design 1 |
+| Idle | After 10 minutes on Home the welcome screen returns, in place of a screensaver, drifting a few pixels each minute |
 | Welcome screen | With a logo, the logo leads at 470 px and the text sits in a small pane. Without one, the time leads |
 
 With no logo, nothing is drawn in its place. The sample logo is only for the repository's screenshots.

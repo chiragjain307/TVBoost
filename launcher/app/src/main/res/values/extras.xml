@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welcome_hint" translatable="false">Press OK to continue</string>
+    <string name="welcome_hint" translatable="false">Press OK for Home</string>
     <string name="sunrise_at" translatable="false">Sunrise %1$s</string>
     <string name="sunset_at" translatable="false">Sunset %1$s</string>
     <string name="tile_ram" translatable="false">RAM</string>

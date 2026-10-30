@@ -54,6 +54,8 @@ final class HomeExtras {
     private static final Uri WEATHER = Uri.parse("content://com.tvboxrevive.helper/now");
     private static final long WELCOME_AGAIN_MS = 30 * 60_000L;
     private static final long TILE_REFRESH_MS = 15_000L;
+    private static final long TICK_MS = 60_000L;
+    private static final long WEATHER_AGAIN_MS = 30 * 60_000L;
     private static final int GLASS_FILL = 0x26FFFFFF;
     private static final int GLASS_RIM = 0x59FFFFFF;
 
@@ -73,6 +75,10 @@ final class HomeExtras {
     private TextView welcomeTime;
     private TextView welcomeWeather;
     private boolean welcomeVisible;
+    private long idleMs;
+    private long weatherReadAt;
+    private LinearLayout welcomeColumn;
+    private final java.util.Random random = new java.util.Random();
     private long leftAt = -1;
     private View systemTile;
     private TextView ramValue;
@@ -82,6 +88,9 @@ final class HomeExtras {
     private View storageBar;
     private View storageRest;
     private boolean resumed;
+    private final Runnable idle = () -> {
+        if (resumed && !welcomeVisible) showWelcome();
+    };
     private final Runnable tileTick = new Runnable() {
         @Override
         public void run() {
@@ -95,7 +104,9 @@ final class HomeExtras {
         public void run() {
             if (!welcomeVisible) return;
             updateWelcomeText();
-            handler.postDelayed(this, 20_000L);
+            drift();
+            if (SystemClock.elapsedRealtime() - weatherReadAt > WEATHER_AGAIN_MS) readWeather(true);
+            handler.postDelayed(this, TICK_MS);
         }
     };
 
@@ -118,6 +129,7 @@ final class HomeExtras {
         extras.unit = json.optString("temperature_unit", "c");
         extras.welcomeOn = wantsWelcome;
         extras.welcomeLogo = json.optBoolean("welcome_logo", false);
+        extras.idleMs = Math.max(0, json.optInt("welcome_idle_minutes", 0)) * 60_000L;
         if (wantsTile) extras.buildSystemTile();
         if (wantsWelcome) extras.buildWelcome();
         return extras;
@@ -139,6 +151,7 @@ final class HomeExtras {
         resumed = true;
         if (welcomeOn && leftAt >= 0 && SystemClock.elapsedRealtime() - leftAt > WELCOME_AGAIN_MS) showWelcome();
         leftAt = -1;
+        restartIdleTimer();
         if (systemTile != null) {
             handler.removeCallbacks(tileTick);
             handler.post(tileTick);
@@ -149,6 +162,7 @@ final class HomeExtras {
         resumed = false;
         leftAt = SystemClock.elapsedRealtime();
         handler.removeCallbacks(tileTick);   // nothing is read while Home is hidden
+        handler.removeCallbacks(idle);
     }
 
     void onDestroy() {
@@ -158,7 +172,10 @@ final class HomeExtras {
 
     /** True when the welcome screen took this key: OK, Back or a direction slides it away. */
     boolean onKey(KeyEvent event) {
-        if (!welcomeVisible) return false;
+        if (!welcomeVisible) {
+            restartIdleTimer();
+            return false;
+        }
         switch (event.getKeyCode()) {
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER:
@@ -183,9 +200,12 @@ final class HomeExtras {
         screen.setClickable(true);
         welcomeImage = new ImageView(activity);
         welcomeImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        welcomeImage.setScaleX(1.02f);    // room for drift() without showing an edge
+        welcomeImage.setScaleY(1.02f);
         screen.addView(welcomeImage, new FrameLayout.LayoutParams(-1, -1));
 
         LinearLayout column = new LinearLayout(activity);
+        welcomeColumn = column;
         column.setOrientation(LinearLayout.VERTICAL);
         column.setGravity(Gravity.CENTER_HORIZONTAL);
         // With a logo the picture carries it as the hero, and these lines sit small in the glass below it.
@@ -218,6 +238,22 @@ final class HomeExtras {
         showWelcome();
     }
 
+    /** Home left alone goes back to the welcome screen, which takes the place of a screensaver in this design. */
+    private void restartIdleTimer() {
+        handler.removeCallbacks(idle);
+        if (welcomeOn && idleMs > 0 && resumed) handler.postDelayed(idle, idleMs);
+    }
+
+    /** Moves the screen a few pixels now and then, so a logo left up for hours cannot mark a panel. */
+    private void drift() {
+        float x = (random.nextInt(7) - 3) * dp(1);
+        float y = (random.nextInt(7) - 3) * dp(1);
+        welcomeImage.setTranslationX(x);
+        welcomeImage.setTranslationY(y);
+        welcomeColumn.setTranslationX(x);
+        welcomeColumn.setTranslationY(y);
+    }
+
     private void showWelcome() {
         welcome.setTranslationY(0);
         welcome.setVisibility(View.VISIBLE);
@@ -227,12 +263,13 @@ final class HomeExtras {
         updateWelcomeText();
         readWeather(true);
         handler.removeCallbacks(tick);
-        handler.postDelayed(tick, 20_000L);
+        handler.postDelayed(tick, TICK_MS);
     }
 
     private void hideWelcome() {
         welcomeVisible = false;
         handler.removeCallbacks(tick);
+        restartIdleTimer();
         int height = welcome.getHeight();
         welcome.animate().translationY(-height).setDuration(420).withLayer().withEndAction(() -> {
             welcome.setVisibility(View.GONE);
@@ -307,6 +344,7 @@ final class HomeExtras {
 
     /** Off the main thread: the helper answers from its cache and refreshes behind it, so ask once more if stale. */
     private void readWeather(boolean mayRetry) {
+        weatherReadAt = SystemClock.elapsedRealtime();
         showWeatherLine("");
         if (latitude.isEmpty() || longitude.isEmpty()) return;
         ContentResolver resolver = activity.getContentResolver();

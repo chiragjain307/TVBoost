@@ -1,4 +1,4 @@
 Liquid glass: frosted panes over soft colour, a welcome screen led by your logo, and a live RAM and storage tile
-Welcome: your logo, greeting, date, time, temperature, sunrise and sunset. OK slides it up to Home.
+Welcome: your logo, greeting, date, time, temperature, sunrise and sunset. OK slides it up to Home, and it returns after 10 idle minutes.
 Home: your logo as large as Design 1, a RAM and storage tile, and one sideways row of apps.
 The temperature comes through a small helper app that this design installs.

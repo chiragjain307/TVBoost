@@ -204,7 +204,8 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     picture(spec, spec["home_logo_center_y"], logo, spec.get("home_panels", ())).save(
         out / "wallpaper.jpg", quality=88, optimize=True)
-    picture(spec, spec["clock_logo_center_y"], logo).save(out / "clock.jpg", quality=88, optimize=True)
+    if spec.get("clock_logo_center_y"):
+        picture(spec, spec["clock_logo_center_y"], logo).save(out / "clock.jpg", quality=88, optimize=True)
     if spec.get("welcome_panel"):
         # With a logo it is the hero of the screen, above a small pane. Without one, the pane takes the centre.
         pane = spec["welcome_panel_logo"] if hero is not None else spec["welcome_panel"]

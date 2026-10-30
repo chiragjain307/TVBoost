@@ -142,10 +142,11 @@ for ip in "$@"; do
     continue
   fi
   tools/theme.sh "$OUT" >/dev/null || { failed=1; continue; }
-  put "$OUT/clock.jpg" clock.jpg || { failed=1; continue; }
   # theme.sh does not know these, and a design without one must not keep the last design's file.
-  if [ -f "$OUT/welcome.jpg" ]; then put "$OUT/welcome.jpg" welcome.jpg || { failed=1; continue; }
-  else tv "rm -f $FILES/welcome.jpg"; fi
+  for extra in clock.jpg welcome.jpg; do
+    if [ -f "$OUT/$extra" ]; then put "$OUT/$extra" "$extra" || { failed=1; continue 2; }
+    else tv "rm -f $FILES/$extra"; fi
+  done
   if [ -n "$(spec helper)" ]; then install_helper || failed=1; fi
   tv "echo $NAME > $FILES/design.txt"
   echo "$ip now shows $NAME"

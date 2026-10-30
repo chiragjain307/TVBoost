@@ -46,9 +46,9 @@ highlight glides instead of snapping. These numbers are for Design 1 with 7 apps
 ## What you get
 
 - **A fast home screen.** A 580 KB launcher with no internet permission, built for the remote.
-- **Your own logo** on Home and the screensaver, with the whole design recoloured to match it.
+- **Your own logo** on Home and the idle screen, with the whole design recoloured to match it.
 - **Saved designs** that you can switch between in seconds, including a liquid glass look.
-- **A welcome screen** led by your logo, with your name, the time, temperature, sunrise and sunset. OK slides it away.
+- **A welcome screen** led by your logo, with your name, the time, temperature, sunrise and sunset. OK slides it away, and it returns when Home sits idle.
 - **A live tile** beside Wi-Fi that shows your real RAM and storage use, even on boxes that fake their specs.
 - **An Inputs button** on TVs with HDMI ports.
 - **Your choice of what goes.** The installer lists each app and its side effects, and you decide what to keep.
@@ -62,7 +62,7 @@ highlight glides instead of snapping. These numbers are for Design 1 with 7 apps
 | Design 1, Home | Design 2, welcome screen |
 |---|---|
 | ![Design 1 home screen](designs/01-navy-gold/preview-home.jpg) | ![Design 2 welcome screen](designs/02-liquid-glass/preview-welcome.jpg) |
-| **Design 2, Home** | **Screensaver** |
+| **Design 2, Home** | **Design 1 screensaver** |
 | ![Design 2 home screen with the RAM and storage tile](designs/02-liquid-glass/preview-home.jpg) | ![Screensaver with the clock beside the logo](assets/screenshots/i96-8k/i96-8k-screensaver-v1.0.jpg) |
 | **Stock Home, before** (thumbnails blurred) | **Settings still work** |
 | ![Stock home screen](assets/screenshots/i96-8k/i96-8k-stock-home-blurred.jpg) | ![Settings panel](assets/screenshots/i96-8k/i96-8k-settings-v1.0.jpg) |
@@ -105,7 +105,7 @@ After installing, sign in to your apps. Then turn off network debugging on the b
 
 ## Your logo
 
-Each run asks **"Apply a new logo? (y/N)"**. Answer yes and give it a file, and the logo appears on Home and the screensaver.
+Each run asks **"Apply a new logo? (y/N)"**. Answer yes and give it a file, and the logo appears on Home and the idle screen.
 
 | Your file | What happens |
 |---|---|
