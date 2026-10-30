@@ -27,7 +27,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN oʻchiq</string>
     <string name="home_settings">Asosiy bosh ekranni tanlash</string>
-    <string name="home_settings_help">TVBox Revive oʻrniga eski bosh ekranga qaytish uchun uni tanlang, TVBox Revive ga qaytish uchun esa TVBox Revive ni. Eski launcher yoqilgan boʻlishi va televizorda bosh ekran tanlash oynasi boʻlishi kerak; agar u oʻchirilgan boʻlsa, avval tiklash skriptini ishga tushiring.</string>
+    <string name="home_settings_help">TVBoost oʻrniga eski bosh ekranga qaytish uchun uni tanlang, TVBoost ga qaytish uchun esa TVBoost ni. Eski launcher yoqilgan boʻlishi va televizorda bosh ekran tanlash oynasi boʻlishi kerak; agar u oʻchirilgan boʻlsa, avval tiklash skriptini ishga tushiring.</string>
     <string name="launcher_settings">Launcher sozlamalari</string>
     <string name="native_settings">Ishlab chiqaruvchi sozlamalari</string>
     <string name="columns_label">Qatordagi ilovalar</string>

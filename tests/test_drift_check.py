@@ -19,7 +19,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 STOCK = "com.google.android.tvlauncher"
-CUSTOM = "com.tvboxrevive.home"
+CUSTOM = "com.tvboost.home"
 
 # Stands in for tools/tv.py: answers the queries check.py makes, and applies what --fix sends.
 FAKE_TV = r'''
@@ -251,8 +251,8 @@ class DriftCheckTest(unittest.TestCase):
         # not write a record of its own that would make restore.sh enable everything afterwards.
         self.tv(disabled=[STOCK])
         self.assertEqual(self.run_check("--fix", str(self.list_path)).returncode, 0)
-        records = list((self.home / ".tvbox-revive").glob("*.json")) \
-            if (self.home / ".tvbox-revive").exists() else []
+        records = list((self.home / ".tvboost").glob("*.json")) \
+            if (self.home / ".tvboost").exists() else []
         self.assertEqual(records, [])
 
     def test_home_on_a_stock_launcher_the_list_leaves_out_is_drift(self):

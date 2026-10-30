@@ -3,7 +3,7 @@
 Home, DNS and the launcher version. This is a configuration backup only. It holds no app data, no APKs
 and no firmware, so it can restore settings but cannot bring back anything that was deleted.
 
-The manifest stays on this computer under ~/.tvbox-revive/backups, never in the repository, because
+The manifest stays on this computer under ~/.tvboost/backups, never in the repository, because
 settings can hold private details such as Wi-Fi names.
 
     TV_HOST=<ip> TV_PORT=<port> tools/venv/bin/python -I tools/backup.py <device id>
@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BACKUPS = Path.home() / ".tvbox-revive" / "backups"
+BACKUPS = Path.home() / ".tvboost" / "backups"
 HOME_Q = "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME"
 
 
@@ -40,7 +40,7 @@ def main():
     folder.mkdir(parents=True, exist_ok=True, mode=0o700)
     for name in ("global", "secure", "system"):
         (folder / f"settings-{name}.txt").write_text(tv(f"settings list {name}"))
-    version = re.search(r"versionName=(\S+)", tv("dumpsys package com.tvboxrevive.home"))
+    version = re.search(r"versionName=(\S+)", tv("dumpsys package com.tvboost.home"))
     manifest = {
         "kind": "configuration backup only, no app data, no APKs, no firmware",
         "created": time.strftime("%Y-%m-%dT%H:%M:%S%z"),

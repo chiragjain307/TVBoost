@@ -14,7 +14,7 @@ tv() { "$PY" -I tools/tv.py "$@"; }
 . tools/common.sh
 detect_port "$1"
 
-installed="$HOME/.tvbox-revive/installed-$TV_HOST.txt"
+installed="$HOME/.tvboost/installed-$TV_HOST.txt"
 [ -f "$installed" ] || { echo "no install record for this device on this computer" >&2; exit 1; }
 list="$(cat "$installed")"
 if device=$("$PY" -I tools/device_match.py 2>/dev/null); then
@@ -25,7 +25,7 @@ fi
 tools/restore.sh "$list" "$stock" || exit 1
 
 backup=""
-latest="$HOME/.tvbox-revive/backups/latest-$TV_HOST.txt"
+latest="$HOME/.tvboost/backups/latest-$TV_HOST.txt"
 [ -f "$latest" ] && backup="$(cat "$latest")/manifest.json"
 mode=null
 name=null
@@ -39,6 +39,6 @@ else
   [ "$name" = null ] && tv "settings delete global private_dns_specifier" || tv "settings put global private_dns_specifier $name"
   tv "settings put global private_dns_mode $mode"
 fi
-tv "pm uninstall com.tvboxrevive.home; pm uninstall com.tvboxrevive.helper" >/dev/null
+tv "pm uninstall com.tvboost.home; pm uninstall com.tvboost.helper" >/dev/null
 tv "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME | tail -n 1; settings get global private_dns_mode"
 echo "undo finished. Reboot the box once to settle it."

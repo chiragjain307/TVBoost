@@ -71,7 +71,7 @@ if [ -z "${STOCK_LAUNCHER:-}" ]; then
   case " $KNOWN_STOCK_LAUNCHERS " in
     *" $HOME_PKG "*) STOCK_LAUNCHER=$HOME_PKG ;;
     *)
-      if [ "$HOME_PKG" = com.tvboxrevive.home ]; then
+      if [ "$HOME_PKG" = com.tvboost.home ]; then
         STOCK_LAUNCHER=none; echo "Home already belongs to this launcher; nothing will be disabled."
       elif [ "$HOME_PKG" = android ]; then
         # Android's chooser: two or more launchers tie and no default is set, which is where a TV lands
@@ -123,7 +123,7 @@ esac
 # HDMI picture on screen. `am start` below would only reuse it, so stop it first; the start
 # then creates a fresh one. A force stop also takes the key helpers off the enabled list, so a helper
 # that was on is written back (cleared first: Android binds again only when the list changes).
-"$PY" -I ../tools/tv.py 's=$(settings get secure enabled_accessibility_services); a=$(settings get secure accessibility_enabled); am force-stop com.tvboxrevive.home; case "$s" in *com.tvboxrevive.home*) settings put secure enabled_accessibility_services ""; settings put secure enabled_accessibility_services "$s"; settings put secure accessibility_enabled "$a" ;; esac' >/dev/null
+"$PY" -I ../tools/tv.py 's=$(settings get secure enabled_accessibility_services); a=$(settings get secure accessibility_enabled); am force-stop com.tvboost.home; case "$s" in *com.tvboost.home*) settings put secure enabled_accessibility_services ""; settings put secure enabled_accessibility_services "$s"; settings put secure accessibility_enabled "$a" ;; esac' >/dev/null
 # Start the launcher on its own, before the stock Home is touched. In the batch below a start that
 # fails only prints an "Error:" line, and the stock launcher would be disabled anyway, leaving the TV
 # with no usable Home. "Status: ok" from `am start -W` means the activity really came up;
@@ -132,9 +132,9 @@ esac
 # make this launcher the home process until a restart, and Android then blocks the stock launcher's
 # remote-button launches (BAL_BLOCK). The component alone still proves the activity comes up.
 if [ "$STOCK_LAUNCHER" = none ]; then
-  START_CMD='am start -W -n com.tvboxrevive.home/.MainActivity'
+  START_CMD='am start -W -n com.tvboost.home/.MainActivity'
 else
-  START_CMD='am start -W -a android.intent.action.MAIN -c android.intent.category.HOME -n com.tvboxrevive.home/.MainActivity'
+  START_CMD='am start -W -a android.intent.action.MAIN -c android.intent.category.HOME -n com.tvboost.home/.MainActivity'
 fi
 START_OUT=$("$PY" -I ../tools/tv.py "$START_CMD")
 echo "$START_OUT"
@@ -145,10 +145,10 @@ if ! printf '%s' "$START_OUT" | grep -qF 'Status: ok' || printf '%s' "$START_OUT
   exit 1
 fi
 printf '%s\n' \
-  "pm grant com.tvboxrevive.home android.permission.ACCESS_FINE_LOCATION 2>/dev/null; echo location-granted" \
-  "cmd package compile -m speed -f com.tvboxrevive.home" \
+  "pm grant com.tvboost.home android.permission.ACCESS_FINE_LOCATION 2>/dev/null; echo location-granted" \
+  "cmd package compile -m speed -f com.tvboost.home" \
   "$DISABLE_STOCK" \
-  "cmd package set-home-activity --user 0 com.tvboxrevive.home/.MainActivity" \
+  "cmd package set-home-activity --user 0 com.tvboost.home/.MainActivity" \
   | "$PY" -I ../tools/tv.py --batch
 
 # Home's owner, or an empty string when the TV cannot be reached (pipefail would otherwise make a
@@ -172,9 +172,9 @@ rollback_home() {
   case "$BACK" in
     "$STOCK_LAUNCHER"/*) echo "$STOCK_LAUNCHER owns Home again." >&2; return 0 ;;
   esac
-  REC="${HOME:-$PWD}/tvbox-revive-handover-$(printf '%s' "$TV_HOST" | tr -c 'A-Za-z0-9._-' '_').txt"
+  REC="${HOME:-$PWD}/tvboost-handover-$(printf '%s' "$TV_HOST" | tr -c 'A-Za-z0-9._-' '_').txt"
   {
-    echo "# tvbox-revive: the launcher handover on $TV_HOST did not finish. From the repo root:"
+    echo "# tvboost: the launcher handover on $TV_HOST did not finish. From the repo root:"
     echo "TV_HOST=$TV_HOST tools/tv.py 'pm enable --user 0 $STOCK_LAUNCHER'"
     echo "TV_HOST=$TV_HOST tools/tv.py 'cmd package set-home-activity --user 0 \$(cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME $STOCK_LAUNCHER | tail -n 1)'"
     echo "# then check: TV_HOST=$TV_HOST tools/tv.py '$HOME_QUERY'"
@@ -192,7 +192,7 @@ rollback_home() {
 # stock launcher back if it is not ours.
 HOME_NOW=$(query_home)
 case "$HOME_NOW" in
-  com.tvboxrevive.home/*) echo "Home now resolves to $HOME_NOW" ;;
+  com.tvboost.home/*) echo "Home now resolves to $HOME_NOW" ;;
   *)
     if [ -z "$HOME_NOW" ]; then
       echo "ERROR: the TV stopped answering while Home was being switched, so the outcome is unknown." >&2
@@ -224,12 +224,12 @@ esac
 # already listed was refused while the APK was replaced, and binds again only once the list changes, so clear it,
 # switch accessibility off and write it back (as tools/theme.sh does).
 enable_service() {   # appends to enabled_accessibility_services without dropping other services
-  svc=com.tvboxrevive.home/.$1
-  "$PY" -I ../tools/tv.py "cmd appops set com.tvboxrevive.home AUTO_START allow 2>/dev/null; cmd appops set com.tvboxrevive.home APP_AUTO_START allow 2>/dev/null; appops write-settings 2>/dev/null; s=\$(settings get secure enabled_accessibility_services); case \"\$s\" in *$1*) settings put secure enabled_accessibility_services ''; settings put secure accessibility_enabled 0; sleep 1; settings put secure enabled_accessibility_services \"\$s\" ;; null|'') settings put secure enabled_accessibility_services $svc ;; *) settings put secure enabled_accessibility_services \"\$s:$svc\" ;; esac; settings put secure accessibility_enabled 1; echo $1 enabled"
+  svc=com.tvboost.home/.$1
+  "$PY" -I ../tools/tv.py "cmd appops set com.tvboost.home AUTO_START allow 2>/dev/null; cmd appops set com.tvboost.home APP_AUTO_START allow 2>/dev/null; appops write-settings 2>/dev/null; s=\$(settings get secure enabled_accessibility_services); case \"\$s\" in *$1*) settings put secure enabled_accessibility_services ''; settings put secure accessibility_enabled 0; sleep 1; settings put secure enabled_accessibility_services \"\$s\" ;; null|'') settings put secure enabled_accessibility_services $svc ;; *) settings put secure enabled_accessibility_services \"\$s:$svc\" ;; esac; settings put secure accessibility_enabled 1; echo $1 enabled"
 }
 if [ "${INPUT_KEY_SERVICE:-0}" = 1 ]; then enable_service InputKeyService; fi
 if [ "${HOME_KEY_SERVICE:-0}" = 1 ]; then enable_service HomeKeyService; fi
 if [ "${RESTORE_KEY_SERVICES:-0}" = 1 ]; then
-  "$PY" -I ../tools/tv.py "pm grant com.tvboxrevive.home android.permission.WRITE_SECURE_SETTINGS && echo restore-granted"
+  "$PY" -I ../tools/tv.py "pm grant com.tvboost.home android.permission.WRITE_SECURE_SETTINGS && echo restore-granted"
 fi
 echo "Installed. Press Home on the remote to see it."

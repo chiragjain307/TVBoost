@@ -7,7 +7,7 @@
 | `tools/recovery.py` | Keeps the undo record that `undo.sh` reads |
 | `tools/check.py` | Reports what a firmware update changed, and can re-apply a list |
 
-Backups stay on your computer in `~/.tvbox-revive`, never in this repository.
+Backups stay on your computer in `~/.tvboost`, never in this repository.
 
 **What a backup holds:** package states, settings, the Home app and DNS values. This is a configuration backup only. It
 holds no app data, no APKs and no firmware, so it cannot bring back anything that was deleted.

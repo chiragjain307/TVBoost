@@ -1,6 +1,6 @@
 # Recovery guide
 
-You don't need to know ADB to follow this. Every command runs from the `tvbox-revive` folder on your computer.
+You don't need to know ADB to follow this. Every command runs from the `tvboost` folder on your computer.
 Replace `<box ip>` with your box's address, from Settings > Network & Internet.
 
 Nothing here is a factory reset. This project never runs one.
@@ -51,13 +51,13 @@ tools/venv/bin/python -I tools/tv.py "cmd package set-home-activity --user 0 com
 
 | Type | Saved? | Where |
 |---|---|---|
-| Configuration: package states, settings, Home, DNS | Yes, before every install | `~/.tvbox-revive/backups` on your computer |
-| Undo record | Yes, before the first change | `~/.tvbox-revive` on your computer |
+| Configuration: package states, settings, Home, DNS | Yes, before every install | `~/.tvboost/backups` on your computer |
+| Undo record | Yes, before the first change | `~/.tvboost` on your computer |
 | App data and sign-ins | **No** | Disabling an app keeps its data on the box, but this project does not back it up |
 | APK files | **No** | Disabled apps stay on the box |
 | Firmware | **No** | This project never touches firmware |
 
-Keep the `~/.tvbox-revive` folder. Without the undo record, `undo.sh` still re-enables every listed app, but it cannot
+Keep the `~/.tvboost` folder. Without the undo record, `undo.sh` still re-enables every listed app, but it cannot
 tell which ones were already off before you installed.
 
 ## Last resort

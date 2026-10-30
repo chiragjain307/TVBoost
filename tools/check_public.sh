@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Stop private data reaching the public repository. It runs on every push through .githooks/pre-push
 # and in CI, and checks the files git tracks. Add your own private words, one per line, to
-# ~/.tvbox-revive/private-words.txt: your name, business, Wi-Fi network or anything else.
+# ~/.tvboost/private-words.txt: your name, business, Wi-Fi network or anything else.
 #
 # Usage: tools/check_public.sh
 #
@@ -35,7 +35,7 @@ lan=$(git grep -IhoE '\b(192\.168\.[0-9]+\.[0-9]+|10\.[0-9]+\.[0-9]+\.[0-9]+)\b'
 mac=$(git grep -IlE '\b([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b' -- . ":(exclude)$SELF" 2>/dev/null || true)
 [ -z "$mac" ] || report 'a MAC address' "$mac"
 
-words="$HOME/.tvbox-revive/private-words.txt"
+words="$HOME/.tvboost/private-words.txt"
 if [ -f "$words" ]; then
   while IFS= read -r word; do
     [ -n "$word" ] || continue

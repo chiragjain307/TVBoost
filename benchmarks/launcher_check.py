@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from func_check import focus, key, shot  # noqa: E402
 from measure import REPO, log, try_tv  # noqa: E402
 
-LAUNCHER = "com.tvboxrevive.home"
+LAUNCHER = "com.tvboost.home"
 DOCK = [("youtube", "com.google.android.youtube.tv"), ("netflix", "com.netflix.mediaclient"),
         ("prime", "com.amazon.amazonvideo.livingroom"), ("hotstar", "in.startv.hotstar"),
         ("playstore", "com.android.vending"), ("chrome", "com.android.chrome")]

@@ -12,16 +12,16 @@
 #          --city <name>   fix the city for the temperature. Otherwise each device finds its own
 #
 # With a logo, the design takes its colours from it. Your logo stays on this computer in
-# ~/.tvbox-revive/logo and is never added to the repository.
+# ~/.tvboost/logo and is never added to the repository.
 #
 # Exit status: 0 done, 1 a box failed, 2 the command line or the design is wrong.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 cd "$HERE"
 PY=tools/venv/bin/python
-PKG=com.tvboxrevive.home
+PKG=com.tvboost.home
 FILES=/sdcard/Android/data/$PKG/files
-SAVED="$HOME/.tvbox-revive/logo"
+SAVED="$HOME/.tvboost/logo"
 USER_TV_PORT="${TV_PORT:-}"
 tv() { "$PY" -I tools/tv.py "$@"; }
 . tools/common.sh
@@ -100,7 +100,7 @@ spec() { "$PY" -I -c "import json; print(json.load(open('$DESIGN/images.json')).
 
 # The pictures are drawn here, outside the repository, for every design, and the design's questions are
 # answered here too: only this computer keeps the name and the city.
-OUT="$HOME/.tvbox-revive/designs/$NAME"
+OUT="$HOME/.tvboost/designs/$NAME"
 rm -rf "$OUT"
 mkdir -p "$OUT"
 cp "$DESIGN/config.json" "$OUT/config.json"
@@ -118,8 +118,8 @@ else
 fi
 
 put() {
-  "$PY" -I tools/b64push.py "$1" "/data/local/tmp/tvr-$2" >/dev/null || return 1
-  tv "cp /data/local/tmp/tvr-$2 $FILES/$2; rm -f /data/local/tmp/tvr-$2"
+  "$PY" -I tools/b64push.py "$1" "/data/local/tmp/tvboost-$2" >/dev/null || return 1
+  tv "cp /data/local/tmp/tvboost-$2 $FILES/$2; rm -f /data/local/tmp/tvboost-$2"
 }
 
 # The small helper that fetches live data, so the launcher itself never needs the internet.
@@ -127,17 +127,17 @@ install_helper() {
   local apk=launcher/helper/build/outputs/apk/release/helper-release.apk
   if [ ! -f "$apk" ]; then
     mkdir -p "$(dirname "$apk")"
-    curl -fsSL -o "$apk.part" "https://github.com/chiragjain307/tvbox-revive/releases/latest/download/tvbox-revive-helper.apk" \
+    curl -fsSL -o "$apk.part" "https://github.com/chiragjain307/TVBoost/releases/latest/download/tvboost-helper.apk" \
       || { echo "no helper app: run ./build.sh" >&2; rm -f "$apk.part"; return 1; }
     want=$(grep helper launcher/RELEASE.sha256 | awk '{print $1}')
     [ "$want" = "$(shasum -a 256 "$apk.part" | awk '{print $1}')" ] \
       || { echo "the downloaded helper does not match launcher/RELEASE.sha256" >&2; rm -f "$apk.part"; return 1; }
     mv "$apk.part" "$apk"
   fi
-  "$PY" -I tools/b64push.py "$apk" /data/local/tmp/tvr-helper.apk >/dev/null || return 1
-  tv "pm install -r /data/local/tmp/tvr-helper.apk; rm -f /data/local/tmp/tvr-helper.apk" | grep -q Success || return 1
+  "$PY" -I tools/b64push.py "$apk" /data/local/tmp/tvboost-helper.apk >/dev/null || return 1
+  tv "pm install -r /data/local/tmp/tvboost-helper.apk; rm -f /data/local/tmp/tvboost-helper.apk" | grep -q Success || return 1
   # Lets the helper use the device's own location where it has one. Most TVs do not, and that is fine.
-  tv "pm grant com.tvboxrevive.helper android.permission.ACCESS_COARSE_LOCATION" >/dev/null 2>&1 || true
+  tv "pm grant com.tvboost.helper android.permission.ACCESS_COARSE_LOCATION" >/dev/null 2>&1 || true
 }
 
 failed=0

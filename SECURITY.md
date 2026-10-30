@@ -15,4 +15,4 @@ access are still present after setup, so:
 
 ## Your data
 
-Backups, undo records and logos stay on your computer in `~/.tvbox-revive`. The launcher has no internet permission.
+Backups, undo records and logos stay on your computer in `~/.tvboost`. The launcher has no internet permission.

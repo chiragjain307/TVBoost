@@ -5,7 +5,7 @@ disabled without this choice: an install that cannot ask, and has no saved choic
     choose_apps.py <device id> <output list> [--saved]
 
 --saved reuses the last choice for this device without asking, for identical boxes. Choices are kept in
-~/.tvbox-revive/choices. Exit status: 0 a list was written, 1 there was no way to ask and no saved choice.
+~/.tvboost/choices. Exit status: 0 a list was written, 1 there was no way to ask and no saved choice.
 """
 import json
 import shutil
@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CHOICES = Path.home() / ".tvbox-revive" / "choices"
+CHOICES = Path.home() / ".tvboost" / "choices"
 
 
 def ordered_list(device):

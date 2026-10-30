@@ -23,7 +23,7 @@ key("HOME")
 time.sleep(args.wait)
 r = {"waited_s": args.wait, "focus_idle": focus(),
      "temp": try_tv("grep -m1 Tsensor /proc/msp/pm_cpu", 15).strip(),
-     "pss": try_tv("dumpsys meminfo com.tvboxrevive.home | grep -m1 'TOTAL:'", 20).split()[1:2]}
+     "pss": try_tv("dumpsys meminfo com.tvboost.home | grep -m1 'TOTAL:'", 20).split()[1:2]}
 shot(out / "screensaver.png")
 key("DPAD_DOWN")
 time.sleep(2.5)

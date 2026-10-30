@@ -9,7 +9,7 @@ import shlex
 import sys
 import time
 
-PACKAGE = "com.tvboxrevive.home"
+PACKAGE = "com.tvboost.home"
 SERVICES = "enabled_accessibility_services"
 FLAG = "accessibility_enabled"
 ACTION = "android.accessibilityservice.AccessibilityService"

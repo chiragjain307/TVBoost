@@ -22,7 +22,7 @@ cd "$HERE"
 PY=tools/venv/bin/python
 APK=launcher/app/build/outputs/apk/release/app-release.apk
 MIN_FREE_KB=51200
-RELEASE_URL=https://github.com/chiragjain307/tvbox-revive/releases/latest/download/tvbox-revive-launcher.apk
+RELEASE_URL=https://github.com/chiragjain307/TVBoost/releases/latest/download/tvboost-launcher.apk
 USER_TV_PORT="${TV_PORT:-}"
 
 DRY=""
@@ -103,14 +103,14 @@ one() {
   if [ -n "$UNIVERSAL" ]; then
     device=universal
     [ "${sdk:-0}" -ge 26 ] || { echo "the launcher needs Android 8 or newer, this device is SDK ${sdk:-unknown}" >&2; return 2; }
-    list="$HOME/.tvbox-revive/universal-$TV_HOST.txt"
-    mkdir -p "$HOME/.tvbox-revive"
+    list="$HOME/.tvboost/universal-$TV_HOST.txt"
+    mkdir -p "$HOME/.tvboost"
     tv "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME" \
       | tail -n 1 | tr -d '\r' | cut -d/ -f1 > "$list"
   else
     list="$HERE/devices/$device/debloat.txt"
     stock=$("$PY" -I -c "import json; print(json.load(open('devices/$device/device.json'))['stock_launcher'])")
-    rm -f "$HOME/.tvbox-revive/universal-$TV_HOST.txt"
+    rm -f "$HOME/.tvboost/universal-$TV_HOST.txt"
   fi
   # Android 8 has no Private DNS setting.
   [ "${sdk:-0}" -ge 28 ] || dns=""
@@ -121,7 +121,7 @@ one() {
   if [ -n "$DRY" ]; then
     cat <<EOF
 DRY RUN. Nothing was changed. On this box install.sh would:
-  1. save a recovery manifest and an undo record under ~/.tvbox-revive
+  1. save a recovery manifest and an undo record under ~/.tvboost
   2. install the launcher and hand Home over from the stock launcher, rolling back if Home does not land
   3. disable these $(grep -cvE '^[[:space:]]*(#|$)' "$list") packages (all can be re-enabled, $device mode):
 $(grep -vE '^[[:space:]]*(#|$)' "$list" | sed 's/^/       /')
@@ -139,8 +139,8 @@ EOF
       case "$reply" in [yY]*) ;; *) echo "stopped: nothing was changed"; return 1 ;; esac
     fi
   else
-    list="$HOME/.tvbox-revive/selected-$TV_HOST.txt"
-    mkdir -p "$HOME/.tvbox-revive"
+    list="$HOME/.tvboost/selected-$TV_HOST.txt"
+    mkdir -p "$HOME/.tvboost"
     "$PY" -I tools/choose_apps.py "$device" "$list" $SAVED_APPS || return 1
     if ! grep -qx "$stock" "$list"; then
       echo "You kept the stock launcher, and Android will not let another launcher be Home while it is on." >&2
@@ -148,7 +148,7 @@ EOF
       return 1
     fi
   fi
-  printf '%s\n' "$list" > "$HOME/.tvbox-revive/installed-$TV_HOST.txt"
+  printf '%s\n' "$list" > "$HOME/.tvboost/installed-$TV_HOST.txt"
   "$PY" -I tools/backup.py "$device" || return 1
   "$PY" -I tools/recovery.py --save "$list" || return 1
   get_apk || return 1

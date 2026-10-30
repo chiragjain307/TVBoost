@@ -18,7 +18,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 STOCK_HOME = "com.google.android.tvlauncher/.MainActivity"
-NEW_HOME = "com.tvboxrevive.home/.MainActivity"
+NEW_HOME = "com.tvboost.home/.MainActivity"
 
 # Stands in for tools/tv.py: a TV that answers shell commands and keeps the state the script changes.
 FAKE_TV = r'''
@@ -52,10 +52,10 @@ def run(command):
         return "Success\n"
     if "am start" in command:
         if state["start_fails"]:
-            return ("Starting: Intent { cmp=com.tvboxrevive.home/.MainActivity }\n"
+            return ("Starting: Intent { cmp=com.tvboost.home/.MainActivity }\n"
                     "Error: Activity not started, unable to resolve Intent\n")
-        return ("Starting: Intent { cmp=com.tvboxrevive.home/.MainActivity }\n"
-                "Status: ok\nActivity: com.tvboxrevive.home/.MainActivity\n")
+        return ("Starting: Intent { cmp=com.tvboost.home/.MainActivity }\n"
+                "Status: ok\nActivity: com.tvboost.home/.MainActivity\n")
     if "pm disable-user" in command:
         if state["disable_fails"]:
             return "Error: java.lang.SecurityException\n"
@@ -168,7 +168,7 @@ class HandoverTest(unittest.TestCase):
         return result, state
 
     def record(self):
-        files = list(self.home.glob("tvbox-revive-handover-*.txt"))
+        files = list(self.home.glob("tvboost-handover-*.txt"))
         self.assertLessEqual(len(files), 1)
         return files[0].read_text() if files else None
 

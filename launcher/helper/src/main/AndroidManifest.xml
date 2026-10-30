@@ -6,10 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <application android:allowBackup="false" android:label="TVBox Revive Helper">
+    <application android:allowBackup="false" android:label="TVBoost Helper">
         <provider
             android:name=".HelperProvider"
-            android:authorities="com.tvboxrevive.helper"
+            android:authorities="com.tvboost.helper"
             android:exported="true" />
     </application>
 </manifest>

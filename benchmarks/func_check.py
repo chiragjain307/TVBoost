@@ -21,7 +21,7 @@ APPS = {"settings": "com.android.tv.settings", "youtube": "com.google.android.yo
         "netflix": "com.netflix.mediaclient", "prime": "com.amazon.amazonvideo.livingroom",
         "playstore": "com.android.vending", "hotstar": "in.startv.hotstar", "chrome": "com.android.chrome"}
 YOUTUBE = APPS["youtube"]
-HOME_APPS = ("com.google.android.tvlauncher", "com.tvboxrevive.home")
+HOME_APPS = ("com.google.android.tvlauncher", "com.tvboost.home")
 VIDEO = "https://www.youtube.com/watch?v=aqz-KE-bpKQ"   # Big Buck Bunny, public and long enough
 
 

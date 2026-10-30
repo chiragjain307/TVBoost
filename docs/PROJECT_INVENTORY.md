@@ -16,7 +16,7 @@ build, and optional parts can be turned off.
 
 | Path | Role | Type |
 |---|---|---|
-| `launcher/app/src/main/java/com/tvboxrevive/home/` | Launcher source | Shared |
+| `launcher/app/src/main/java/com/tvboost/home/` | Launcher source | Shared |
 | `.../ClockScene.java` | Screensaver, with the `clock.jpg` picture and the side-column clock | Shared |
 | `.../Config.java`, `res/values/config.xml` | Defaults that a design overrides | Shared |
 | `.../HomeExtras.java` | Welcome screen and the RAM and storage tile. Off unless a design asks | Optional |

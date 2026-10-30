@@ -53,7 +53,7 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-            <category android:name="com.tvboxrevive.home.category.DOCK_CARD" />
+            <category android:name="com.tvboost.home.category.DOCK_CARD" />
         </intent>
         <!-- stock_home_redirect: HomeKeyService looks up the stock launcher's HOME activity. -->
         <intent>
@@ -67,7 +67,7 @@
         <package android:name="com.amazon.tv.launcher" />
         <!-- Coocaa OS sources for the Inputs menu (coocaa_sources); see CoocaaSources. -->
         <!-- The optional helper app, read for the temperature and the For You posters. -->
-        <provider android:authorities="com.tvboxrevive.helper" />
+        <provider android:authorities="com.tvboost.helper" />
         <provider android:authorities="com.skyworth.tv.provider" />
         <provider android:authorities="com.skyworth.tv.sdk.provider" />
     </queries>
@@ -195,7 +195,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- Screensaver: pick it in Settings, or `settings put secure screensaver_components
-             com.tvboxrevive.home/.ClockDream` over adb. -->
+             com.tvboost.home/.ClockDream` over adb. -->
         <service
             android:name=".ClockDream"
             android:label="@string/dream_name"
@@ -219,7 +219,7 @@
          app_keys (config.xml or a theme) bring back other remote buttons; see InputKeyService. -->
         <!-- Bound again by the system after a force stop, which restarts Home on firmware that kills
              third-party apps (TCL tc8000_ay30a2). It reads no notification.
-             cmd notification allow_listener com.tvboxrevive.home/.GuardRevival -->
+             cmd notification allow_listener com.tvboost.home/.GuardRevival -->
         <service
             android:name=".GuardRevival"
             android:directBootAware="true"
@@ -235,7 +235,7 @@
             android:exported="true"
             android:permission="android.permission.WRITE_SECURE_SETTINGS">
             <intent-filter>
-                <action android:name="com.tvboxrevive.home.GUARD" />
+                <action android:name="com.tvboost.home.GUARD" />
             </intent-filter>
         </receiver>
 

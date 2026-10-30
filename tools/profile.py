@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ask for the details a design needs, once, and keep them on this computer in ~/.tvbox-revive/profile.json.
+"""Ask for the details a design needs, once, and keep them on this computer in ~/.tvboost/profile.json.
 The place is not one of them: each device works out its own, unless --city sets one for this run.
 
     profile.py name <config.json>         ask for the name on the welcome screen
@@ -11,7 +11,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-HOME = Path.home() / ".tvbox-revive"
+HOME = Path.home() / ".tvboost"
 PROFILE = HOME / "profile.json"
 
 

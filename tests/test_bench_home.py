@@ -7,8 +7,8 @@ from unittest import mock
 from tools import bench
 
 
-COMPONENT = "com.tvboxrevive.home/.MainActivity"
-CLASS = "com.tvboxrevive.home.MainActivity"
+COMPONENT = "com.tvboost.home/.MainActivity"
+CLASS = "com.tvboost.home.MainActivity"
 OTHER = "com.android.tv.settings/.MainSettings"
 
 
@@ -63,7 +63,7 @@ class ReturnToHomeTest(unittest.TestCase):
         for version, tag, extra in (("8", "am_on_resume_called", ""),
                                     ("10", "am_on_resume_called", ""),
                                     ("14", "wm_on_resume_called", ",3")):
-            for component in (COMPONENT, f"com.tvboxrevive.home/{CLASS}"):
+            for component in (COMPONENT, f"com.tvboost.home/{CLASS}"):
                 with self.subTest(android=version, component=component):
                     values, commands = self.measure([home(), resume(tag=tag, extra=extra)],
                                                     component=component)

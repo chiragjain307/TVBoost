@@ -1,6 +1,6 @@
 <div align="center">
 
-# TVBox Revive
+# TVBoost
 
 **A free launcher, debloater and ad blocker for Android TV boxes and Android TVs.**
 Replace the slow stock home screen, block ads, and put your own logo on the screen, in about two minutes.
@@ -9,7 +9,7 @@ No root. No flashing. One command to undo.
 
 [Install](#install) · [Compatibility](#compatibility) · [Results](#measured-results) · [Designs](#designs) · [Your logo](#your-logo) · [Undo](#undo-everything)
 
-![TVBox Revive home screen](assets/screenshots/i96-8k/i96-8k-focus-v1.0.jpg)
+![TVBoost home screen](assets/screenshots/i96-8k/i96-8k-focus-v1.0.jpg)
 
 </div>
 
@@ -87,8 +87,8 @@ harder to replace Home. If you try another device, please [report what happened]
 developer options. Windows is not tested.
 
 ```bash
-git clone https://github.com/chiragjain307/tvbox-revive.git
-cd tvbox-revive
+git clone https://github.com/chiragjain307/TVBoost.git
+cd TVBoost
 ./install.sh --dry-run <box ip>     # shows every planned change, and changes nothing
 ./install.sh <box ip>               # verified devices, about 2 minutes 20 seconds
 ./install.sh --universal <box ip>   # any other Android 8+ device: launcher, design and DNS, no debloat
@@ -113,7 +113,7 @@ Each run asks **"Apply a new logo? (y/N)"**. Answer yes and give it a file, and 
 | Dark logo on white | The white goes, and the dark parts turn light for the dark screen |
 | Logo on a dark colour | The background goes, and the colours stay |
 
-The design then takes its colours from your logo, so the whole screen matches. Your logo stays in `~/.tvbox-revive` on your computer. This
+The design then takes its colours from your logo, so the whole screen matches. Your logo stays in `~/.tvboost` on your computer. This
 repository never stores one, and a check blocks any push that would include one.
 
 ## Your apps, your choice

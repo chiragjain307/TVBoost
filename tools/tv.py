@@ -50,8 +50,8 @@ except ImportError as e:
                   if os.path.isfile(p)), None)
     # Once only, marked in the environment: a venv that lacks adb_shell as well gets the message below
     # rather than another run of itself.
-    if _venv and not os.environ.get("TVBOX_REVIVE_TV_PY_VENV"):
-        os.environ["TVBOX_REVIVE_TV_PY_VENV"] = "1"
+    if _venv and not os.environ.get("TVBOOST_TV_PY_VENV"):
+        os.environ["TVBOOST_TV_PY_VENV"] = "1"
         _args = [_venv, "-I", os.path.abspath(__file__), *sys.argv[1:]]
         if os.name == "nt":
             # No exec on Windows: os.execv starts a second process, and the shell takes its prompt back.
@@ -312,7 +312,7 @@ ARITY = {"--probe": 1, "--push": 3, "--pull": 3, "--batch": 1, "--reboot": 1}
 # screencap writes the PNG on the TV and we pull the file afterwards: adb_shell's shell() decodes
 # what comes back as text, which corrupts an image, and `exec-out screencap -p` returns a broken
 # PNG on some MediaTek sets (docs/RECOVERY_GUIDE.md). /data/local/tmp is writable from shell.
-SHOT_REMOTE = "/data/local/tmp/tvbox-revive-shot.png"
+SHOT_REMOTE = "/data/local/tmp/tvboost-shot.png"
 PNG = b"\x89PNG\r\n\x1a\n"
 # Key names go into a shell command on the TV, so only plain key names and numeric keycodes get through.
 KEY_NAME = re.compile(r"^[A-Z0-9_]+$")

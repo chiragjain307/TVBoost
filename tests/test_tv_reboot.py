@@ -21,7 +21,7 @@ import unittest
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
-CHILD = "TVBOX_REVIVE_TV_REBOOT_CHILD"  # Set in the child's environment; -I drops only PYTHON* variables.
+CHILD = "TVBOOST_TV_REBOOT_CHILD"  # Set in the child's environment; -I drops only PYTHON* variables.
 
 try:
     from adb_shell import constants, exceptions

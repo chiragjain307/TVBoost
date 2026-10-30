@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.tvboxrevive.helper'
+    namespace 'com.tvboost.helper'
     compileSdk 34
 
     defaultConfig {
-        applicationId 'com.tvboxrevive.helper'
+        applicationId 'com.tvboost.helper'
         minSdk 26
         targetSdk 34
         versionCode 1

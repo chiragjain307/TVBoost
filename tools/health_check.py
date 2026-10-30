@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / "benchmarks"))
 from func_check import focus, net_watch  # noqa: E402
 from measure import HOME_Q, reboot_timed, try_tv  # noqa: E402
 
-HOME = "com.tvboxrevive.home"
+HOME = "com.tvboost.home"
 MAX_SYSTEM_BYTES = 200_000   # the system account moved about 1 KB per boot once the agents were off
 failed = []
 
@@ -48,7 +48,7 @@ def main():
     verified = args[0] != "universal"
     if verified:
         # What the owner chose to disable, not the full suggested list: a kept app is not a failure.
-        chosen = Path.home() / ".tvbox-revive" / f"selected-{os.environ.get('TV_HOST', '')}.txt"
+        chosen = Path.home() / ".tvboost" / f"selected-{os.environ.get('TV_HOST', '')}.txt"
         debloat = chosen if chosen.is_file() else ROOT / "devices" / args[0] / "debloat.txt"
         listed = [ln.split("#")[0].strip() for ln in debloat.read_text().splitlines()]
         listed = [p for p in listed if p]
