@@ -129,8 +129,7 @@ A new key needs one there in the same pull request.
 | Key | Type | Meaning |
 |---|---|---|
 | `welcome_screen` | bool | A welcome screen on the first Home after boot, and after 30 minutes away. OK slides it up. Uses `welcome.jpg` |
-| `renewals_panel` | bool | The next three renewals from `renewals.json`, at the top right |
-| `for_you_row` | bool | The For You panel under the clock: four show posters, or the most-used apps with no data |
+| `system_tile` | bool | A tile before the Wi-Fi button with RAM and storage use, updated only while Home is on screen |
 | `welcome_logo` | bool | Set by `design.sh` when a logo is used: the logo leads the welcome screen and the text sits small below it |
 | `greeting_name` | string | The name after the greeting |
 | `latitude`, `longitude` | string | Place for sunrise, sunset and the temperature |

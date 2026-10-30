@@ -27,7 +27,7 @@ date use wide letter spacing in capitals.
 | App row | 6 tiles on screen, one row, scrolls sideways |
 | Logo height on Home | 560 px, centred at y 372 |
 | Logo on the screensaver | 560 px, centred at y 540 |
-| Top bar | Greeting, clock and date on the left. Wi-Fi and Settings on the right |
+| Top bar | Greeting, clock and date on the left. Inputs (TVs only), system tile (Design 2), Wi-Fi and Settings on the right |
 
 ## Components
 
@@ -52,11 +52,9 @@ date use wide letter spacing in capitals.
 | Ground | Dark `#0A0F24` with pools of `#2B4CC2` and `#7A3FC9` |
 | Glass pane | Backdrop blurred 34 px, 10% white lift, a top sheen and a bright rim, plus a soft shadow |
 | Where it lives | Baked into `wallpaper.jpg` and `welcome.jpg`, because the Mali-450 cannot blur live |
-| Live panels | The For You and renewals panels use a translucent fill with a thin rim |
+| System tile | Translucent pill before the Wi-Fi button, with a thin meter for RAM and for storage |
 | Dock pane | x 113 to 1805, y 826 to 1006, radius 44, set in `images.json` |
-| App row | One row that scrolls sideways, so tiles never rise over the logo or panels |
-| For You panel | Top left under the clock, four posters at 116x168 px |
-| Renewals panel | Top right, at the same height as For You, with each app's own icon |
+| App row | One row that scrolls sideways, so tiles never rise over the logo |
 | Home logo | The same size and place as Design 1 |
 | Welcome screen | With a logo, the logo leads at 470 px and the text sits in a small pane. Without one, the time leads |
 

@@ -40,7 +40,7 @@ minutes each, using the same script before and after: [benchmarks](benchmarks/).
 
 Honest notes: available RAM rose less than the raw savings suggest, because Android keeps more apps in real memory once it stops
 compressing them, which is why swap improved so much. Focus movement takes longer on the new launcher (416 ms against 250 ms), because the
-highlight glides instead of snapping. These numbers are for Design 1 with 7 apps. Each app tile adds memory, and with 13 apps Design 2 measured 48 MB, about 6 MB above Design 1. Full results, including free RAM and app launch times, are in the
+highlight glides instead of snapping. These numbers are for Design 1 with 7 apps. Each app tile adds memory. Full results, including free RAM and app launch times, are in the
 [benchmark report](devices/i96-8k-hi3798mv300/benchmarks/README.md).
 
 ## What you get
@@ -49,8 +49,8 @@ highlight glides instead of snapping. These numbers are for Design 1 with 7 apps
 - **Your own logo** on Home and the screensaver, with the whole design recoloured to match it.
 - **Saved designs** that you can switch between in seconds, including a liquid glass look.
 - **A welcome screen** led by your logo, with your name, the time, temperature, sunrise and sunset. OK slides it away.
-- **A renewals panel** with each app's real logo, showing when your subscriptions renew.
-- **A For You panel** with four popular shows from the apps you have, ranked by what you open most.
+- **A live tile** beside Wi-Fi that shows your real RAM and storage use, even on boxes that fake their specs.
+- **An Inputs button** on TVs with HDMI ports.
 - **Your choice of what goes.** The installer lists each app and its side effects, and you decide what to keep.
 - **Debloating** that disables apps instead of deleting them, so everything can come back.
 - **Ad blocking** through AdGuard DNS. Optional.
@@ -62,8 +62,8 @@ highlight glides instead of snapping. These numbers are for Design 1 with 7 apps
 | Design 1, Home | Design 2, welcome screen |
 |---|---|
 | ![Design 1 home screen](designs/01-navy-gold/preview-home.jpg) | ![Design 2 welcome screen](designs/02-liquid-glass/preview-welcome.jpg) |
-| **Design 2, Home** (posters blurred here) | **Screensaver** |
-| ![Design 2 home screen with For You and renewals panels](designs/02-liquid-glass/preview-home.jpg) | ![Screensaver with the clock beside the logo](assets/screenshots/i96-8k/i96-8k-screensaver-v1.0.jpg) |
+| **Design 2, Home** | **Screensaver** |
+| ![Design 2 home screen with the RAM and storage tile](designs/02-liquid-glass/preview-home.jpg) | ![Screensaver with the clock beside the logo](assets/screenshots/i96-8k/i96-8k-screensaver-v1.0.jpg) |
 | **Stock Home, before** (thumbnails blurred) | **Settings still work** |
 | ![Stock home screen](assets/screenshots/i96-8k/i96-8k-stock-home-blurred.jpg) | ![Settings panel](assets/screenshots/i96-8k/i96-8k-settings-v1.0.jpg) |
 
@@ -126,7 +126,7 @@ choice is saved, so identical boxes can reuse it with `--saved-apps`. Nothing is
 | Design | Look |
 |---|---|
 | `01-navy-gold` | Clean and dark, with your logo centred on Home |
-| `02-liquid-glass` | Frosted glass, a welcome screen, and For You and renewals panels on Home |
+| `02-liquid-glass` | Frosted glass, a welcome screen led by your logo, and a live RAM and storage tile |
 
 ```bash
 ./design.sh list                          # saved designs
@@ -137,33 +137,15 @@ Switching changes only the look. Design 2 asks for a name and a city the first t
 baked into the pictures on your computer, because budget GPUs cannot blur live, so it costs the box almost nothing. Add your own designs in
 `designs/`: see the [design system](docs/design-system/README.md) and the [settings reference](docs/THEME_KEYS.md).
 
-## Renewals
-
-Apps do not share their billing dates with anything else on the device, so nothing can read them automatically. Enter each subscription
-once, and monthly or yearly dates roll forward by themselves.
-
-```bash
-./renewals.sh <box ip>
-```
-
-## For You
-
-A slim glass panel under the clock shows four popular shows from the apps you have installed, favouring the ones you open most. Press Up from your
-apps to reach it, OK to open that app, and Down to go back. Android does not let a launcher read your watch history or open a show directly, so this
-means popular on your apps, not picked from what you watched. With no internet it shows your four most-used apps instead.
-
 ## Live data and privacy
 
 The launcher has no internet permission in any design. Design 2 installs a separate 11 KB helper that holds the only internet access. It has no
-screen and no background service, and it fetches only when the launcher asks:
+screen and no background service, and it asks [Open-Meteo](https://open-meteo.com/) for the temperature at your city's coordinates, at most every 30
+minutes, and only while the welcome screen is showing. Sunrise and sunset are calculated on the device. Open-Meteo's free service is for
+non-commercial use, so check its terms before using this in a business.
 
-| Data | From | Sent | How often |
-|---|---|---|---|
-| Temperature | [Open-Meteo](https://open-meteo.com/) | Your city's coordinates | At most every 30 minutes |
-| Shows and posters | [TVmaze](https://www.tvmaze.com/api), licensed CC BY-SA | Nothing about you | At most every 12 hours |
-
-Sunrise and sunset are calculated on the device. TVmaze coverage of regional shows is limited. Open-Meteo's free service is for non-commercial use,
-so check its terms before using this in a business.
+The RAM and storage tile updates only while Home is on screen. It reads storage from the system's `df` tool, because one tested box reports
+exactly 8 GB through Android while really having 4 GB.
 
 ## Ad blocking
 

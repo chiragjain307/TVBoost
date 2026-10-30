@@ -26,7 +26,7 @@ Real screenshots with the sample logo. It never appears on a box unless someone 
 | `designs/01-navy-gold/preview-home.jpg` | Design 1 Home | Real |
 | `designs/01-navy-gold/preview-screensaver.jpg` | Design 1 screensaver | Real |
 | `designs/02-liquid-glass/preview-welcome.jpg` | Design 2 welcome screen | Real, sample name and city |
-| `designs/02-liquid-glass/preview-home.jpg` | Design 2 Home with sample renewals | Real, posters blurred because they are third-party art |
+| `designs/02-liquid-glass/preview-home.jpg` | Design 2 Home with the system tile | Real |
 
 ## Design pictures
 

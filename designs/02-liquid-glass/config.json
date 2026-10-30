@@ -37,7 +37,6 @@
   "dock_band": false,
   "glass_style": "glass",
   "welcome_screen": true,
-  "renewals_panel": true,
-  "for_you_row": true,
-  "single_row": true
+  "single_row": true,
+  "system_tile": true
 }

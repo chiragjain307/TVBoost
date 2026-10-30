@@ -14,7 +14,7 @@ from the running box.
 | GPU | | Mali-450 MP, OpenGL ES 2.0 |
 | RAM | 1 GB (1,048,576 kB) | The exact round figure looks hard-coded. Memory zones add up to about 927 MB |
 | Swap | | zram, 596 MB, lzo |
-| Storage | | `/data` 3.9 GB, `/system` 984 MB at 89% |
+| Storage | Android reports exactly 8 GB | `/data` is really 4.0 GB, `/system` 984 MB at 89%. Only `df` shows the true size |
 | Network | | Wi-Fi only |
 | Remote | | Bluetooth LE with microphone, plus IR |
 | HDMI inputs | | None, output only |

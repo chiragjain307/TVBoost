@@ -11,7 +11,6 @@ build, and optional parts can be turned off.
 | `undo.sh` | Restore packages, stock Home and DNS, remove the launcher | Shared |
 | `design.sh` | List, read and switch designs, and ask about a logo | Shared |
 | `build.sh` | Run launcher tests and build | Shared |
-| `renewals.sh` | Enter subscription dates and send them to boxes | Optional |
 
 ## Launcher
 
@@ -20,10 +19,10 @@ build, and optional parts can be turned off.
 | `launcher/app/src/main/java/com/tvboxrevive/home/` | Launcher source | Shared |
 | `.../ClockScene.java` | Screensaver, with the `clock.jpg` picture and the side-column clock | Shared |
 | `.../Config.java`, `res/values/config.xml` | Defaults that a design overrides | Shared |
-| `.../HomeExtras.java` | Welcome screen, renewals panel and For You panel. Off unless a design asks | Optional |
-| `.../Renewals.java`, `.../ForYou.java` | Renewal date logic and usage ranking | Optional |
-| `launcher/helper/` | Helper app: temperature and shows. Holds the only internet permission | Optional |
-| `launcher/app/src/test/` | 313 unit tests | Shared |
+| `.../HomeExtras.java` | Welcome screen and the RAM and storage tile. Off unless a design asks | Optional |
+| `.../SystemStats.java` | Tile numbers, and reading `df` | Optional |
+| `launcher/helper/` | Helper app for the temperature. Holds the only internet permission | Optional |
+| `launcher/app/src/test/` | 309 unit tests | Shared |
 | `launcher/build-and-install.sh` | Install with Home handover and rollback | Shared |
 | `launcher/RELEASE.sha256` | Hash of the released APK, checked by `install.sh` | Shared |
 
@@ -35,7 +34,7 @@ build, and optional parts can be turned off.
 | `tools/device_match.py` | Match a box to a profile, or refuse | Shared |
 | `tools/backup.py` | Recovery manifest before each install | Shared |
 | `tools/choose_apps.py` | Ask which apps to keep before anything is disabled | Shared |
-| `tools/profile.py` | Name, city and renewal dates, kept on this computer | Optional |
+| `tools/profile.py` | Name and city, kept on this computer | Optional |
 | `tools/common.sh` | Find the device's ADB port | Shared |
 | `tools/recovery.py`, `tools/disable.sh`, `tools/restore.sh` | Undo record, guarded disabling, restoring | Shared |
 | `tools/check.py` | Find what a firmware update changed | Shared |

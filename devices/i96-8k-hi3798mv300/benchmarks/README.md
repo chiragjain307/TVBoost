@@ -20,8 +20,7 @@ RAM metrics are listed separately, because they mean different things.
 
 Free RAM fell because Android keeps more in cache. Available RAM is the number that matters. Play Services grew because less of it sits in swap.
 
-Each app tile adds memory. With 13 apps on Home, Design 2's launcher measured 48 MB after 5 idle minutes, and right after a restart it measured about 6 MB
-above Design 1 with the same apps. Design 2 was not given the full 3-boot run.
+Each app tile adds memory. Design 2 has not been through the full 3-boot run in its final form.
 
 ## System
 

@@ -29,7 +29,6 @@
     "name",
     "city"
   ],
-  "renewals": true,
   "welcome_panel_logo": [
     430,
     624,
@@ -37,6 +36,5 @@
     884,
     48
   ],
-  "helper": true,
-  "logo_max_width": 590
+  "helper": true
 }

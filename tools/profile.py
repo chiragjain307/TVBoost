@@ -1,22 +1,17 @@
 #!/usr/bin/env python3
 """Ask for the details a design needs, once, and keep them on this computer in ~/.tvbox-revive/profile.json:
-the name on the welcome screen, the city for the temperature and sun times, and subscription renewal dates.
-Apps do not share their billing dates, so renewals can only come from the person who pays them.
+the name on the welcome screen and the city for the temperature and sun times.
 
     profile.py ask <config.json> name city     ask, then write the answers into a design's config.json
-    profile.py renewals                        add or change renewal dates
 """
 import json
-import re
 import sys
 import urllib.parse
 import urllib.request
-from datetime import date
 from pathlib import Path
 
 HOME = Path.home() / ".tvbox-revive"
 PROFILE = HOME / "profile.json"
-RENEWALS = HOME / "renewals.json"
 
 
 def load(path, empty):
@@ -84,41 +79,10 @@ def fill_config(config_path, wanted):
     Path(config_path).write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n")
 
 
-def edit_renewals():
-    rows = load(RENEWALS, [])
-    print("Apps cannot share their billing dates, so enter each subscription once. Monthly and yearly dates")
-    print("then roll forward by themselves.")
-    for row in rows:
-        print(f"  {row['name']}: {row['date']} ({row['cycle']})")
-    while True:
-        name = ask("Subscription name, such as Netflix (Enter to finish)")
-        if not name:
-            break
-        when = ask("Next renewal date, YYYY-MM-DD")
-        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", when):
-            print("Use the form 2026-11-12.")
-            continue
-        try:
-            date.fromisoformat(when)
-        except ValueError:
-            print("That date does not exist.")
-            continue
-        cycle = ask("Repeats monthly, yearly or once", "monthly").lower()
-        if cycle not in ("monthly", "yearly", "once"):
-            print("Use monthly, yearly or once.")
-            continue
-        rows = [r for r in rows if r["name"].lower() != name.lower()]
-        rows.append({"name": name, "date": when, "cycle": cycle})
-    save(RENEWALS, rows)
-    print(f"{len(rows)} renewals saved in {RENEWALS}")
-
-
 def main():
     args = sys.argv[1:]
     if len(args) >= 2 and args[0] == "ask":
         fill_config(args[1], args[2:])
-    elif args == ["renewals"]:
-        edit_renewals()
     else:
         sys.exit(__doc__)
 

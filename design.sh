@@ -96,7 +96,7 @@ esac
 spec() { "$PY" -I -c "import json; print(json.load(open('$DESIGN/images.json')).get('$1') or '')"; }
 
 # The pictures are drawn here, outside the repository, for every design, and the design's questions are
-# answered here too: only this computer keeps the name, the city and the renewal dates.
+# answered here too: only this computer keeps the name and the city.
 OUT="$HOME/.tvbox-revive/designs/$NAME"
 rm -rf "$OUT"
 mkdir -p "$OUT"
@@ -104,11 +104,6 @@ cp "$DESIGN/config.json" "$OUT/config.json"
 asks=$("$PY" -I -c "import json; print(' '.join(json.load(open('$DESIGN/images.json')).get('asks', [])))")
 if [ -n "$asks" ]; then
   "$PY" -I tools/profile.py ask "$OUT/config.json" $asks || exit 1
-fi
-if [ -n "$(spec renewals)" ] && [ -t 0 ]; then
-  printf 'Add or change subscription renewal dates? (y/N): '
-  read -r reply
-  case "$reply" in [yY]*) "$PY" -I tools/profile.py renewals ;; esac
 fi
 if [ -n "$LOGO" ]; then
   "$PY" -I tools/make_design_images.py "$DESIGN" "$OUT" --logo "$LOGO" >/dev/null || exit 1
@@ -151,9 +146,6 @@ for ip in "$@"; do
   # theme.sh does not know these, and a design without one must not keep the last design's file.
   if [ -f "$OUT/welcome.jpg" ]; then put "$OUT/welcome.jpg" welcome.jpg || { failed=1; continue; }
   else tv "rm -f $FILES/welcome.jpg"; fi
-  if [ -n "$(spec renewals)" ] && [ -f "$HOME/.tvbox-revive/renewals.json" ]; then
-    put "$HOME/.tvbox-revive/renewals.json" renewals.json || { failed=1; continue; }
-  fi
   if [ -n "$(spec helper)" ]; then install_helper || failed=1; fi
   tv "echo $NAME > $FILES/design.txt"
   echo "$ip now shows $NAME"

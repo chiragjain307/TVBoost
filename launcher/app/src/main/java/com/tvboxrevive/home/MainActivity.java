@@ -207,7 +207,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean shamsi;
     /** greeting_name: said after the greeting, which is shown in capitals. */
     private String greetingName = "";
-    /** The welcome screen, renewals panel and For You row; null when the design uses none of them. */
+    /** The welcome screen and system tile; null when the design uses neither. */
     private HomeExtras extras;
     /** Optional time-of-day backdrop (config.xml, sky_intensity); 0 keeps it hidden. */
     private SkyView sky;
@@ -913,7 +913,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         // Not after recreate(): the launch intent survives it and would open the settings again.
         if (savedInstanceState == null && !openLauncherSettingsIfAsked(getIntent())) openInputsIfAsked(getIntent());
-        extras = HomeExtras.attach(this, new ArrayList<>(dockApps));
+        extras = HomeExtras.attach(this);
     }
 
     /**

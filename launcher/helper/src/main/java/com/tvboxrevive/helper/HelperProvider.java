@@ -6,46 +6,26 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
- * Live data for the launcher, which has no internet permission of its own. It answers from its cache straight
- * away and refreshes behind the answer, so a slow network never holds up Home, and it only fetches when asked, so
- * nothing polls while the TV is idle. The temperature comes from Open-Meteo, which receives only the place. Shows
- * come from TVmaze, which receives nothing about the viewer. Data from TVmaze is licensed CC BY-SA.
+ * The temperature for the launcher, which has no internet permission of its own. It answers from its cache
+ * straight away and refreshes behind the answer, so a slow network never holds up the launcher, and it only fetches
+ * when asked, so nothing polls while the TV is idle. Open-Meteo receives only the place.
  */
 public class HelperProvider extends ContentProvider {
     private static final long WEATHER_AGE_MS = 30 * 60_000L;
-    private static final long SHOWS_AGE_MS = 12 * 60 * 60_000L;
-    private static final int DAYS = 5;
-    private static final int POSTERS = 16;
     private static final String[] WEATHER_COLUMNS = {"temperature", "stale"};
-    private static final String[] SHOW_COLUMNS = {"title", "rating", "network", "poster"};
-    private static final Set<String> NETWORKS = new HashSet<>(Arrays.asList("Netflix", "Prime Video", "Apple TV",
-            "Apple TV+", "HBO Max", "Max", "Disney+", "Hotstar", "JioHotstar", "SonyLIV", "ZEE5", "Paramount+", "Hulu"));
     private volatile boolean fetchingWeather;
-    private volatile boolean fetchingShows;
 
     @Override
     public boolean onCreate() {
@@ -54,7 +34,7 @@ public class HelperProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] args, String sort) {
-        return "/foryou".equals(uri.getPath()) ? shows() : weather(uri);
+        return weather(uri);
     }
 
     private SharedPreferences prefs() {
@@ -117,105 +97,6 @@ public class HelperProvider extends ContentProvider {
                 fetchingWeather = false;
             }
         }, "weather").start();
-    }
-
-    // ---- shows ------------------------------------------------------------------------------------
-
-    private Cursor shows() {
-        SharedPreferences prefs = prefs();
-        if (System.currentTimeMillis() - prefs.getLong("shows_at", 0) > SHOWS_AGE_MS) refreshShows(prefs);
-        MatrixCursor cursor = new MatrixCursor(SHOW_COLUMNS);
-        try {
-            JSONArray rows = new JSONArray(prefs.getString("shows", "[]"));
-            for (int i = 0; i < rows.length(); i++) {
-                JSONObject row = rows.getJSONObject(i);
-                cursor.addRow(new Object[]{row.getString("title"), row.getString("rating"), row.getString("network"),
-                        "content://com.tvboxrevive.helper/poster/" + row.getLong("id")});
-            }
-        } catch (org.json.JSONException e) {
-            return cursor;
-        }
-        return cursor;
-    }
-
-    private void refreshShows(SharedPreferences prefs) {
-        if (fetchingShows) return;
-        fetchingShows = true;
-        new Thread(() -> {
-            try {
-                List<JSONObject> found = new ArrayList<>();
-                Set<Long> seen = new HashSet<>();
-                LocalDate day = LocalDate.now();
-                for (int i = 0; i < DAYS; i++) {
-                    JSONArray episodes = new JSONArray(read("https://api.tvmaze.com/schedule/web?date=" + day.minusDays(i)));
-                    for (int e = 0; e < episodes.length(); e++) {
-                        JSONObject embedded = episodes.getJSONObject(e).optJSONObject("_embedded");
-                        JSONObject show = embedded == null ? null : embedded.optJSONObject("show");
-                        JSONObject row = show == null ? null : row(show);
-                        if (row != null && seen.add(row.getLong("id"))) found.add(row);
-                    }
-                }
-                found.sort(Comparator.comparingDouble((JSONObject r) -> -r.optDouble("score")));
-                JSONArray kept = new JSONArray();
-                for (JSONObject row : found) {
-                    if (kept.length() >= POSTERS) break;
-                    if (savePoster(row)) kept.put(row);
-                }
-                if (kept.length() > 0) {
-                    prefs.edit().putString("shows", kept.toString()).putLong("shows_at", System.currentTimeMillis()).apply();
-                }
-            } catch (Exception e) {
-                // Keep the last list and try again on the next query.
-            } finally {
-                fetchingShows = false;
-            }
-        }, "shows").start();
-    }
-
-    private static JSONObject row(JSONObject show) throws org.json.JSONException {
-        JSONObject channel = show.optJSONObject("webChannel");
-        JSONObject image = show.optJSONObject("image");
-        JSONObject rating = show.optJSONObject("rating");
-        if (channel == null || image == null || rating == null) return null;
-        double score = rating.optDouble("average", 0);
-        String network = channel.optString("name");
-        if (score <= 0 || !NETWORKS.contains(network) || image.optString("medium").isEmpty()) return null;
-        return new JSONObject().put("id", show.getLong("id")).put("title", show.getString("name"))
-                .put("network", network).put("score", score).put("rating", String.format(Locale.US, "%.1f", score))
-                .put("image", image.getString("medium"));
-    }
-
-    private File poster(long id) {
-        return new File(getContext().getCacheDir(), "poster-" + id + ".jpg");
-    }
-
-    private boolean savePoster(JSONObject row) {
-        try {
-            File file = poster(row.getLong("id"));
-            if (file.isFile()) return true;
-            HttpURLConnection connection = (HttpURLConnection) new URL(row.getString("image")).openConnection();
-            connection.setConnectTimeout(8000);
-            connection.setReadTimeout(12000);
-            try (InputStream in = connection.getInputStream(); FileOutputStream out = new FileOutputStream(file)) {
-                byte[] buffer = new byte[8192];
-                for (int n; (n = in.read(buffer)) > 0; ) out.write(buffer, 0, n);
-            } finally {
-                connection.disconnect();
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
-        try {
-            File file = poster(Long.parseLong(uri.getLastPathSegment()));
-            return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-        } catch (NumberFormatException e) {
-            throw new FileNotFoundException(uri.toString());
-        }
     }
 
     @Override

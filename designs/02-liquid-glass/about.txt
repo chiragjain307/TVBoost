@@ -1,4 +1,4 @@
-Liquid glass: frosted panes over soft colour, a welcome screen, renewals and a For You panel
-Welcome: greeting with your name, date, time, temperature, sunrise and sunset. OK slides it up to Home.
-Home: your logo as large as Design 1, For You under the clock, renewals at the top right, and one sideways row of apps.
-Live data comes through a small helper app that this design installs.
+Liquid glass: frosted panes over soft colour, a welcome screen led by your logo, and a live RAM and storage tile
+Welcome: your logo, greeting, date, time, temperature, sunrise and sunset. OK slides it up to Home.
+Home: your logo as large as Design 1, a RAM and storage tile, and one sideways row of apps.
+The temperature comes through a small helper app that this design installs.
