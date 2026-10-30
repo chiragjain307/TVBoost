@@ -19,6 +19,7 @@ First public release.
 - A live RAM and storage tile beside Wi-Fi, with an Inputs button to its left on TVs with HDMI ports
 - All apps in one row that scrolls sideways, so nothing covers the logo
 - A small helper app that holds the only internet access, so the launcher keeps none
+- Automatic location: each device finds its own city for the temperature and sun times, and `--city` fixes one if it is wrong
 - Your own logo on Home and the screensaver, with the design's colours taken from it
 - A choice of which apps to keep before anything is disabled
 - A screensaver mode with a centred logo and a clock that stays clear of it
@@ -27,6 +28,8 @@ First public release.
 
 **Known issues**
 
+- Automatic location was tested through the internet connection on the I96 8K, where it found the right city. The path through Android's own location service is untested, because that box has none. A connection-based city can be off by a nearby city
+- Installing or switching a design restarts Home, which takes the screen from any app that is playing
 - On the I96 8K, a restart command froze twice and needed a power cycle, and twice the box dropped off the network during app installs and reset itself. The cause was not found.
 - On the I96 8K, about 1 KB still goes to the vendor's server at each boot. The sender was not found.
 - The voice process stays in memory, because stopping it breaks the voice button.

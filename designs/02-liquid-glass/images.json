@@ -24,10 +24,6 @@
       44
     ]
   ],
-  "asks": [
-    "name",
-    "city"
-  ],
   "welcome_panel_logo": [
     430,
     624,
@@ -35,5 +31,6 @@
     884,
     48
   ],
-  "helper": true
+  "helper": true,
+  "asks_name": true
 }

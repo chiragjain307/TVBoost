@@ -133,15 +133,19 @@ choice is saved, so identical boxes can reuse it with `--saved-apps`. Nothing is
 ./design.sh 02-liquid-glass <box ip>      # switch, in about 20 seconds
 ```
 
-Switching changes only the look. Design 2 asks for a name and a city the first time, and installs a tiny helper app. The glass is
+Switching changes only the look, but it restarts Home, and Android then puts Home in front of whatever is playing, so run it when nobody is watching. Design 2 asks for a name the first time, and installs a tiny helper app. The glass is
 baked into the pictures on your computer, because budget GPUs cannot blur live, so it costs the box almost nothing. Add your own designs in
 `designs/`: see the [design system](docs/design-system/README.md) and the [settings reference](docs/THEME_KEYS.md).
 
 ## Live data and privacy
 
-The launcher has no internet permission in any design. Design 2 installs a separate 11 KB helper that holds the only internet access. It has no
-screen and no background service, and it asks [Open-Meteo](https://open-meteo.com/) for the temperature at your city's coordinates, at most every 30
-minutes, and only while the welcome screen is showing. Sunrise and sunset are calculated on the device. The installer suggests a city from your internet connection through ipapi.co, which you can accept or change, because these boxes have no GPS. Open-Meteo's free service is for
+The launcher has no internet permission in any design. Design 2 installs a separate 9 KB helper that holds the only internet access. It has no
+screen and no background service, and it asks [Open-Meteo](https://open-meteo.com/) for the temperature, at most every 30 minutes, and only while the
+welcome screen is showing. Sunrise and sunset are calculated on the device.
+
+Nobody sets a location. Each device works out its own the first time the welcome screen opens, and again once a day: it uses Android's location if
+the device has one, and most TVs do not, so otherwise it asks [ipapi.co](https://ipapi.co/) where its internet connection is. That service sees the
+device's public IP address, and it can be off by a nearby city. Pass `--city <name>` to `install.sh` or `design.sh` to fix the city if it is wrong. Open-Meteo's free service is for
 non-commercial use, so check its terms before using this in a business.
 
 The RAM and storage tile updates only while Home is on screen. It reads storage from the system's `df` tool, because one tested box reports

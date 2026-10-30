@@ -67,6 +67,8 @@ final class HomeExtras {
     private String name = "";
     private String latitude = "";
     private String longitude = "";
+    private String foundLatitude = "";
+    private String foundLongitude = "";
     private String unit = "c";
     private View welcome;
     private ImageView welcomeImage;
@@ -318,7 +320,8 @@ final class HomeExtras {
     private int[] sun() {
         try {
             LocalDate today = LocalDate.now();
-            return Sun.riseAndSet(today, Double.parseDouble(latitude), Double.parseDouble(longitude), ZoneId.systemDefault());
+            return Sun.riseAndSet(today, Double.parseDouble(latitude.isEmpty() ? foundLatitude : latitude),
+                    Double.parseDouble(longitude.isEmpty() ? foundLongitude : longitude), ZoneId.systemDefault());
         } catch (NumberFormatException e) {
             return null;
         }
@@ -342,29 +345,44 @@ final class HomeExtras {
         welcomeWeather.setText(String.join("     ", parts));
     }
 
-    /** Off the main thread: the helper answers from its cache and refreshes behind it, so ask once more if stale. */
+    /** Off the main thread, as the helper may need the network. If it could not reach it, ask once more. */
     private void readWeather(boolean mayRetry) {
         weatherReadAt = SystemClock.elapsedRealtime();
         showWeatherLine("");
-        if (latitude.isEmpty() || longitude.isEmpty()) return;
         ContentResolver resolver = activity.getContentResolver();
-        Uri uri = WEATHER.buildUpon().appendQueryParameter("lat", latitude).appendQueryParameter("lon", longitude)
-                .appendQueryParameter("unit", unit).build();
+        Uri.Builder builder = WEATHER.buildUpon().appendQueryParameter("unit", unit);
+        // With no place in the design, the helper works out where this device is.
+        if (!latitude.isEmpty() && !longitude.isEmpty()) {
+            builder.appendQueryParameter("lat", latitude).appendQueryParameter("lon", longitude);
+        }
+        Uri uri = builder.build();
         new Thread(() -> {
             String temperature = "";
+            String city = "";
+            String lat = "";
+            String lon = "";
             boolean stale = false;
             try (Cursor cursor = resolver.query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     temperature = cursor.getString(0);
                     stale = cursor.getInt(1) != 0;
+                    city = cursor.getString(2);
+                    lat = cursor.getString(3);
+                    lon = cursor.getString(4);
                 }
             } catch (RuntimeException e) {
-                temperature = "";   // no helper installed: sunrise and sunset still show
+                temperature = "";   // no helper installed: sunrise and sunset still show if the design set a place
             }
             String shown = temperature;
+            String foundCity = city;
+            String foundLat = lat;
+            String foundLon = lon;
             boolean again = stale && mayRetry;
             handler.post(() -> {
                 if (!welcomeVisible) return;
+                if (!foundCity.isEmpty()) place = foundCity;
+                foundLatitude = foundLat;
+                foundLongitude = foundLon;
                 showWeatherLine(shown);
                 if (again) handler.postDelayed(() -> readWeather(false), 5_000L);
             });

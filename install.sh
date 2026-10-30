@@ -10,6 +10,7 @@
 #          --logo <file>     use this logo, without asking
 #          --no-logo         no logo, without asking
 #          --keep-logo       reuse the saved logo if there is one, without asking
+#          --city <name>     fix the city for the temperature. Otherwise the device finds its own
 #          --no-dns          leave the box's DNS alone
 #          --universal       launcher, design and DNS only, for any Android 8+ device. No debloat list
 #          --saved-apps      reuse your last choice of apps to disable, without asking
@@ -30,8 +31,9 @@ UNIVERSAL=""
 SAVED_APPS=""
 DESIGN=01-navy-gold
 LOGO_ARGS=()
+CITY_ARGS=()
 IPS=()
-usage() { sed -n 6,15p "$HERE/install.sh" | sed 's/^# *//' >&2; exit 2; }
+usage() { sed -n 6,16p "$HERE/install.sh" | sed 's/^# *//' >&2; exit 2; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY=1; shift ;;
@@ -41,6 +43,7 @@ while [ $# -gt 0 ]; do
     --design) [ $# -ge 2 ] || usage; DESIGN="$2"; shift 2 ;;
     --logo) [ $# -ge 2 ] || usage; LOGO_ARGS=(--logo "$2"); shift 2 ;;
     --no-logo|--keep-logo) LOGO_ARGS=("$1"); shift ;;
+    --city) [ $# -ge 2 ] || usage; CITY_ARGS=(--city "$2"); shift 2 ;;
     -h|--help) usage ;;
     -*) echo "not an option: $1" >&2; usage ;;
     *) IPS+=("$1"); shift ;;
@@ -155,7 +158,7 @@ EOF
   if [ "$device" != universal ]; then
     TVINPUT_ALLOW=1 tools/disable.sh "$list" || return 1
   fi
-  "$HERE/design.sh" "$DESIGN" "$TV_HOST" ${LOGO_ARGS[@]+"${LOGO_ARGS[@]}"} || return 1
+  "$HERE/design.sh" "$DESIGN" "$TV_HOST" ${LOGO_ARGS[@]+"${LOGO_ARGS[@]}"} ${CITY_ARGS[@]+"${CITY_ARGS[@]}"} || return 1
   if [ -n "$dns" ]; then
     tv "settings put global private_dns_specifier dns.adguard-dns.com; settings put global private_dns_mode hostname" || return 1
   fi

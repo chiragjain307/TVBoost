@@ -9,6 +9,7 @@
 # Options: --logo <file>   use this logo, without asking
 #          --no-logo       no logo, without asking
 #          --keep-logo     reuse the saved logo if there is one, without asking
+#          --city <name>   fix the city for the temperature. Otherwise each device finds its own
 #
 # With a logo, the design takes its colours from it. Your logo stays on this computer in
 # ~/.tvbox-revive/logo and is never added to the repository.
@@ -27,6 +28,7 @@ tv() { "$PY" -I tools/tv.py "$@"; }
 usage() { sed -n 5,7p "$HERE/design.sh" | sed 's/^# *//' >&2; exit 2; }
 
 LOGO=""
+CITY=""
 MODE=ask
 POSITIONAL=()
 while [ $# -gt 0 ]; do
@@ -34,6 +36,7 @@ while [ $# -gt 0 ]; do
     --logo) [ $# -ge 2 ] || usage; LOGO="$2"; MODE=file; shift 2 ;;
     --no-logo) MODE=none; shift ;;
     --keep-logo) MODE=keep; shift ;;
+    --city) [ $# -ge 2 ] || usage; CITY="$2"; shift 2 ;;
     *) POSITIONAL+=("$1"); shift ;;
   esac
 done
@@ -101,9 +104,12 @@ OUT="$HOME/.tvbox-revive/designs/$NAME"
 rm -rf "$OUT"
 mkdir -p "$OUT"
 cp "$DESIGN/config.json" "$OUT/config.json"
-asks=$("$PY" -I -c "import json; print(' '.join(json.load(open('$DESIGN/images.json')).get('asks', [])))")
-if [ -n "$asks" ]; then
-  "$PY" -I tools/profile.py ask "$OUT/config.json" $asks || exit 1
+if [ -n "$(spec asks_name)" ]; then
+  "$PY" -I tools/profile.py name "$OUT/config.json" || exit 1
+fi
+# Each device works out its own place. --city fixes one, for a device whose connection points somewhere else.
+if [ -n "$CITY" ]; then
+  "$PY" -I tools/profile.py city "$OUT/config.json" "$CITY" || exit 1
 fi
 if [ -n "$LOGO" ]; then
   "$PY" -I tools/make_design_images.py "$DESIGN" "$OUT" --logo "$LOGO" >/dev/null || exit 1
@@ -129,7 +135,9 @@ install_helper() {
     mv "$apk.part" "$apk"
   fi
   "$PY" -I tools/b64push.py "$apk" /data/local/tmp/tvr-helper.apk >/dev/null || return 1
-  tv "pm install -r /data/local/tmp/tvr-helper.apk; rm -f /data/local/tmp/tvr-helper.apk" | grep -q Success
+  tv "pm install -r /data/local/tmp/tvr-helper.apk; rm -f /data/local/tmp/tvr-helper.apk" | grep -q Success || return 1
+  # Lets the helper use the device's own location where it has one. Most TVs do not, and that is fine.
+  tv "pm grant com.tvboxrevive.helper android.permission.ACCESS_COARSE_LOCATION" >/dev/null 2>&1 || true
 }
 
 failed=0

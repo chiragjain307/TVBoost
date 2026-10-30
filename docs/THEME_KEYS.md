@@ -133,8 +133,8 @@ A new key needs one there in the same pull request.
 | `welcome_logo` | bool | Set by `design.sh` when a logo is used: the logo leads the welcome screen and the text sits small below it |
 | `welcome_idle_minutes` | number | Minutes Home may sit untouched before the welcome screen returns, in place of a screensaver. 0 is off |
 | `greeting_name` | string | The name after the greeting |
-| `latitude`, `longitude` | string | Place for sunrise, sunset and the temperature |
-| `location_name` | string | The place name shown beside the temperature |
+| `latitude`, `longitude` | string | Fixes the place for sunrise, sunset and the temperature. Leave them out and the device finds its own |
+| `location_name` | string | The place name shown beside a fixed place. A place the device found uses the city it found |
 | `temperature_unit` | `c` or `f` | Celsius by default |
 
 ## Wallpapers
