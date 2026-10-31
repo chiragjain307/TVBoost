@@ -149,6 +149,11 @@ for ip in "$@"; do
     failed=1
     continue
   fi
+  # Where the stock launcher stays Home, as on Google TV, the Home button has to know its name.
+  home=$(tv "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME" \
+    | tail -n 1 | tr -d '\r' | cut -d/ -f1)
+  case "$home" in "$PKG"|android|*setupwraith*) home="" ;; esac
+  "$PY" -I tools/profile.py redirect "$OUT/config.json" "$home" || { failed=1; continue; }
   tools/theme.sh "$OUT" >/dev/null || { failed=1; continue; }
   # theme.sh does not know these, and a design without one must not keep the last design's file.
   for extra in clock.jpg welcome.jpg; do

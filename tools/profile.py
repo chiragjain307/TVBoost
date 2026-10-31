@@ -4,6 +4,7 @@ The place is not one of them: each device works out its own, unless --city sets 
 
     profile.py name <config.json>         ask for the name on the welcome screen
     profile.py city <config.json> <city>  set a fixed city in a design's config.json
+    profile.py redirect <config.json> <package>  name the stock launcher that stays Home, or pass "" for none
 """
 import json
 import sys
@@ -55,12 +56,23 @@ def set_city(config_path, name):
     Path(config_path).write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n")
 
 
+def set_redirect(config_path, package):
+    config = load(Path(config_path), {})
+    if package:
+        config["stock_home_redirect"] = package
+    else:
+        config.pop("stock_home_redirect", None)
+    Path(config_path).write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n")
+
+
 def main():
     args = sys.argv[1:]
     if len(args) == 2 and args[0] == "name":
         fill_name(args[1])
     elif len(args) == 3 and args[0] == "city":
         set_city(args[1], args[2])
+    elif len(args) == 3 and args[0] == "redirect":
+        set_redirect(args[1], args[2])
     else:
         sys.exit(__doc__)
 

@@ -13,6 +13,7 @@
 #          --city <name>     fix the city for the temperature. Otherwise the device finds its own
 #          --no-dns          leave the box's DNS alone
 #          --universal       launcher, design and DNS only, for any Android 8+ device. No debloat list
+#          --no-reboot       skip the reboot before the health check
 #          --saved-apps      reuse your last choice of apps to disable, without asking
 #
 # Exit status: 0 every box passed, 1 a box failed, 2 a box was refused or the command line is wrong.
@@ -28,17 +29,19 @@ USER_TV_PORT="${TV_PORT:-}"
 DRY=""
 DNS=1
 UNIVERSAL=""
+REBOOT=--reboot
 SAVED_APPS=""
 DESIGN=01-navy-gold
 LOGO_ARGS=()
 CITY_ARGS=()
 IPS=()
-usage() { sed -n 6,16p "$HERE/install.sh" | sed 's/^# *//' >&2; exit 2; }
+usage() { sed -n 6,17p "$HERE/install.sh" | sed 's/^# *//' >&2; exit 2; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY=1; shift ;;
     --no-dns) DNS=""; shift ;;
     --universal) UNIVERSAL=1; shift ;;
+    --no-reboot) REBOOT=""; shift ;;
     --saved-apps) SAVED_APPS=--saved; shift ;;
     --design) [ $# -ge 2 ] || usage; DESIGN="$2"; shift 2 ;;
     --logo) [ $# -ge 2 ] || usage; LOGO_ARGS=(--logo "$2"); shift 2 ;;
@@ -91,7 +94,7 @@ get_apk() {
 one() {
   export TV_HOST="$1"
   detect_port "$1"
-  local device list free sdk rc stock dns="$DNS"
+  local device list free sdk rc stock dns="$DNS" keep_stock="" stays="$HOME/.tvboost/stock-stays-$1"
   device=$("$PY" -I tools/device_match.py)
   rc=$?
   [ "$rc" -ne 2 ] || return 2
@@ -107,6 +110,12 @@ one() {
     mkdir -p "$HOME/.tvboost"
     tv "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME" \
       | tail -n 1 | tr -d '\r' | cut -d/ -f1 > "$list"
+    # With the stock launcher off, Google TV's setup wizard takes Home, which can crash the whole TV, and turning the
+    # wizard off can delete the saved Wi-Fi network. So nothing is disabled there: the Home button opens the launcher.
+    if tv "cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.HOME" \
+      | grep -q 'setupwraith/'; then
+      keep_stock=1
+    fi
   else
     list="$HERE/devices/$device/debloat.txt"
     stock=$("$PY" -I -c "import json; print(json.load(open('devices/$device/device.json'))['stock_launcher'])")
@@ -119,20 +128,28 @@ one() {
   echo "matched profile: $device ($((free / 1024)) MB free on /data)"
   [ "$free" -ge "$MIN_FREE_KB" ] || { echo "not enough free storage on the box" >&2; return 1; }
   if [ -n "$DRY" ]; then
+    if [ -n "$keep_stock" ]; then
+      steps="  2. install the launcher and leave the stock launcher on: this is Google TV, where it has to stay Home
+  3. disable nothing, and turn on the Home button service, so the Home button opens the new launcher"
+    else
+      steps="  2. install the launcher and hand Home over from the stock launcher, rolling back if Home does not land
+  3. disable these $(grep -cvE '^[[:space:]]*(#|$)' "$list") packages (all can be re-enabled, $device mode):
+$(grep -vE '^[[:space:]]*(#|$)' "$list" | sed 's/^/       /')"
+    fi
     cat <<EOF
 DRY RUN. Nothing was changed. On this box install.sh would:
   1. save a recovery manifest and an undo record under ~/.tvboost
-  2. install the launcher and hand Home over from the stock launcher, rolling back if Home does not land
-  3. disable these $(grep -cvE '^[[:space:]]*(#|$)' "$list") packages (all can be re-enabled, $device mode):
-$(grep -vE '^[[:space:]]*(#|$)' "$list" | sed 's/^/       /')
+$steps
   4. apply design $DESIGN (${LOGO_ARGS[*]:-ask about a logo})
   5. $([ -n "$dns" ] && echo 'turn on AdGuard Private DNS (dns.adguard-dns.com)' || echo 'leave DNS alone')
-  6. reboot and run the health check
+  6. $([ -n "$REBOOT" ] && echo 'reboot and run the health check' || echo 'run the health check, with no reboot')
 EOF
     return 0
   fi
   # Nothing is disabled until the owner has chosen what to keep.
-  if [ "$device" = universal ]; then
+  if [ -n "$keep_stock" ]; then
+    echo "This is Google TV: nothing will be disabled. The stock launcher stays, and the Home button opens the new one."
+  elif [ "$device" = universal ]; then
     if [ -t 0 ]; then
       printf 'Disable the stock launcher %s so the new one can be Home? (y/N): ' "$(cat "$list")"
       read -r reply
@@ -152,7 +169,13 @@ EOF
   "$PY" -I tools/backup.py "$device" || return 1
   "$PY" -I tools/recovery.py --save "$list" || return 1
   get_apk || return 1
-  SKIP_BUILD=1 launcher/build-and-install.sh || return 1
+  rm -f "$stays"
+  if [ -n "$keep_stock" ]; then
+    : > "$stays"
+    STOCK_STAYS_HOME=1 HOME_KEY_SERVICE=1 SKIP_BUILD=1 launcher/build-and-install.sh || return 1
+  else
+    SKIP_BUILD=1 launcher/build-and-install.sh || return 1
+  fi
   # The disable guard reads each package's permission block, and some firmware prints none for listed
   # packages. A verified profile only reaches this line after matching a box already tested with them.
   if [ "$device" != universal ]; then
@@ -163,7 +186,7 @@ EOF
     tv "settings put global private_dns_specifier dns.adguard-dns.com; settings put global private_dns_mode hostname" || return 1
   fi
   sleep 15   # Android writes package state about 10 s after the last change
-  "$PY" -I tools/health_check.py "$device" --reboot
+  "$PY" -I tools/health_check.py "$device" $REBOOT
 }
 
 failed=0

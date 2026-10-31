@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Put a box back the way it was before install.sh: disabled packages and stock Home from the undo
-# record, DNS back to its saved values, and the launcher with its design removed.
+# record, DNS and system settings back to their saved values, and the launcher with its design removed.
 #
 # Usage: ./undo.sh <box ip>
 set -uo pipefail
@@ -22,7 +22,9 @@ if device=$("$PY" -I tools/device_match.py 2>/dev/null); then
 else
   stock=$(cat "$list")
 fi
-tools/restore.sh "$list" "$stock" || exit 1
+# On Google TV the stock launcher was never touched, so there is nothing to bring back.
+stays="$HOME/.tvboost/stock-stays-$TV_HOST"
+[ -f "$stays" ] || tools/restore.sh "$list" "$stock" || exit 1
 
 backup=""
 latest="$HOME/.tvboost/backups/latest-$TV_HOST.txt"
@@ -40,5 +42,28 @@ else
   tv "settings put global private_dns_mode $mode"
 fi
 tv "pm uninstall com.tvboost.home; pm uninstall com.tvboost.helper" >/dev/null
+# Android rewrites its list of notification apps just after an uninstall, and on Google TV that left the list
+# empty. So wait for that, write the saved values back, and read each one to be sure it stayed.
+sleep 5
+put_back() {   # <name in the backup> <secure setting>
+  [ -f "$backup" ] || return 0
+  local value try
+  value=$("$PY" -I -c "import json; print(json.load(open('$backup')).get('$1', 'not saved'))")
+  case "$value" in
+    'not saved') return 0 ;;
+    null) tv "settings delete secure $2" >/dev/null; return 0 ;;
+  esac
+  for try in 1 2 3; do
+    tv "settings put secure $2 '$value'"
+    sleep 3
+    [ "$(tv "settings get secure $2" | tail -n 1 | tr -d '\r')" = "$value" ] && return 0
+  done
+  echo "could not put back $2: set it to '$value'" >&2
+}
+put_back notification_listeners enabled_notification_listeners
+put_back accessibility_services enabled_accessibility_services
+put_back accessibility_enabled accessibility_enabled
+put_back touch_exploration touch_exploration_granted_accessibility_services
+rm -f "$stays"
 tv "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME | tail -n 1; settings get global private_dns_mode"
 echo "undo finished. Reboot the box once to settle it."

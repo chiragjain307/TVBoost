@@ -63,6 +63,11 @@ fi
 # the setup wizard, or another third-party launcher, none of which should be disabled by accident.
 # Pass STOCK_LAUNCHER=<package> to name it yourself, or STOCK_LAUNCHER=none to disable nothing.
 KNOWN_STOCK_LAUNCHERS="com.google.android.tvlauncher com.google.android.apps.tv.launcherx com.google.android.leanbacklauncher com.mitv.tvhome"
+# STOCK_STAYS_HOME=1: the stock launcher stays on and stays Android's Home, and the Home button opens this launcher,
+# so pass HOME_KEY_SERVICE=1 with it. Google TV needs this: its setup wizard outranks this launcher once the stock one
+# is off, and turning the wizard off can delete the saved Wi-Fi network.
+STOCK_STAYS_HOME=${STOCK_STAYS_HOME:-0}
+if [ "$STOCK_STAYS_HOME" = 1 ]; then STOCK_LAUNCHER=none; fi
 if [ -z "${STOCK_LAUNCHER:-}" ]; then
   HOME_PKG=$("$PY" -I ../tools/tv.py 'cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME' \
     | tail -n 1 | tr -d '\r' | cut -d/ -f1) || {
@@ -144,11 +149,13 @@ if ! printf '%s' "$START_OUT" | grep -qF 'Status: ok' || printf '%s' "$START_OUT
   echo "ERROR: the new launcher did not start (see above); $STOCK_LAUNCHER was left enabled." >&2
   exit 1
 fi
+if [ "$STOCK_STAYS_HOME" = 1 ]; then SET_HOME="echo stock launcher stays Home"
+else SET_HOME="cmd package set-home-activity --user 0 com.tvboost.home/.MainActivity"; fi
 printf '%s\n' \
   "pm grant com.tvboost.home android.permission.ACCESS_FINE_LOCATION 2>/dev/null; echo location-granted" \
   "cmd package compile -m speed -f com.tvboost.home" \
   "$DISABLE_STOCK" \
-  "cmd package set-home-activity --user 0 com.tvboost.home/.MainActivity" \
+  "$SET_HOME" \
   | "$PY" -I ../tools/tv.py --batch
 
 # Home's owner, or an empty string when the TV cannot be reached (pipefail would otherwise make a
@@ -191,21 +198,25 @@ rollback_home() {
 # system_server. So check where Home ended up, and put the
 # stock launcher back if it is not ours.
 HOME_NOW=$(query_home)
-case "$HOME_NOW" in
-  com.tvboost.home/*) echo "Home now resolves to $HOME_NOW" ;;
-  *)
-    if [ -z "$HOME_NOW" ]; then
-      echo "ERROR: the TV stopped answering while Home was being switched, so the outcome is unknown." >&2
-    else
-      echo "ERROR: Home resolves to $HOME_NOW, not to the new launcher." >&2
-    fi
-    rollback_home || true
-    if [ -n "$HOME_NOW" ]; then
-      echo "On Google TV this usually means com.google.android.tungsten.setupwraith also claims Home: add it to" >&2
-      echo "your debloat list (see README, Troubleshooting), apply the list, then run this script again." >&2
-    fi
-    exit 1 ;;
-esac
+if [ "$STOCK_STAYS_HOME" = 1 ]; then
+  echo "Home stays on ${HOME_NOW:-the stock launcher}, and the Home button opens the new launcher."
+else
+  case "$HOME_NOW" in
+    com.tvboost.home/*) echo "Home now resolves to $HOME_NOW" ;;
+    *)
+      if [ -z "$HOME_NOW" ]; then
+        echo "ERROR: the TV stopped answering while Home was being switched, so the outcome is unknown." >&2
+      else
+        echo "ERROR: Home resolves to $HOME_NOW, not to the new launcher." >&2
+      fi
+      rollback_home || true
+      if [ -n "$HOME_NOW" ]; then
+        echo "On Google TV this usually means com.google.android.tungsten.setupwraith also claims Home. Do not disable it:" >&2
+        echo "that can delete the saved Wi-Fi network. Run ./install.sh --universal, which leaves the stock launcher on." >&2
+      fi
+      exit 1 ;;
+  esac
+fi
 
 # Optional accessibility services. Off unless asked for, and Android switches them off again on
 # every reinstall, so pass the flag each time you run this script.

@@ -410,9 +410,9 @@ final class HomeExtras {
         tile.addView(second);
         ViewGroup bar = activity.findViewById(R.id.topButtons);
         View wifi = activity.findViewById(R.id.btnWifi);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(136), dp(42));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(130), dp(42));
         params.gravity = Gravity.CENTER_VERTICAL;
-        params.rightMargin = dp(10);
+        params.leftMargin = dp(10);   // Wi-Fi brings its own gap, the button before the tile does not
         bar.addView(tile, bar.indexOfChild(wifi), params);
         systemTile = tile;
     }

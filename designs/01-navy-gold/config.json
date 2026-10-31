@@ -1,4 +1,5 @@
 {
+  "date_below_clock": true,
   "dock_apps": [
     "com.google.android.youtube.tv",
     "com.netflix.ninja",

@@ -137,7 +137,7 @@ class HandoverTest(unittest.TestCase):
         self.home = self.base / "home"
         self.home.mkdir()
 
-    def handover(self, **overrides):
+    def handover(self, stays=False, **overrides):
         state = {
             "stock_home": STOCK_HOME,
             "home": STOCK_HOME,
@@ -153,10 +153,12 @@ class HandoverTest(unittest.TestCase):
         state.update(overrides)
         self.state_path.write_text(json.dumps(state))
         env = {k: v for k, v in os.environ.items()
-               if k not in ("STOCK_LAUNCHER", "INPUT_KEY_SERVICE", "HOME_KEY_SERVICE")}
+               if k not in ("STOCK_LAUNCHER", "STOCK_STAYS_HOME", "INPUT_KEY_SERVICE", "HOME_KEY_SERVICE")}
         env.update(TV_HOST="192.168.1.50", FAKE_TV_STATE=str(self.state_path),
                    HOME=str(self.home), JAVA_HOME=str(self.base / "java"),
                    ANDROID_HOME=str(self.base / "android-sdk"))
+        if stays:
+            env.update(STOCK_STAYS_HOME="1", HOME_KEY_SERVICE="1")
         if os.name != "posix" or not shutil.which("bash"):
             raise unittest.SkipTest("build-and-install.sh is a POSIX script; it needs bash")
         result = subprocess.run(
@@ -210,6 +212,16 @@ class HandoverTest(unittest.TestCase):
         self.assertIn("setupwraith", result.stderr)
         self.assertFalse(state["stock_disabled"])
         self.assertIsNone(self.record())
+
+    def test_stock_launcher_that_stays_home_is_left_alone(self):
+        result, state = self.handover(stays=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("the Home button opens the new launcher", result.stdout)
+        commands = state["commands"]
+        self.assertFalse(any("pm disable-user" in c or "set-home-activity" in c for c in commands))
+        self.assertFalse(state["stock_disabled"])
+        self.assertEqual(state["home"], STOCK_HOME)
+        self.assertTrue(any("HomeKeyService" in c for c in commands), "the Home button service is turned on")
 
     def test_failed_rollback_is_not_reported_as_recovered(self):
         result, state = self.handover(set_home_fails=True, enable_fails=True)

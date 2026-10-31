@@ -55,8 +55,13 @@ def main():
         enabled = set(re.findall(r"package:(\S+)", try_tv("pm list packages -e --user 0", 30)))
         still_on = [p for p in listed if p in enabled]
         check("listed apps disabled", not still_on, ", ".join(still_on) or f"{len(listed)} listed")
-    owner = try_tv(HOME_Q, 20).strip().splitlines()
-    check("Home owner", bool(owner) and owner[-1].startswith(HOME), owner[-1] if owner else "no answer")
+    if (Path.home() / ".tvboost" / f"stock-stays-{os.environ.get('TV_HOST', '')}").is_file():
+        services = try_tv("settings get secure enabled_accessibility_services", 15)
+        check("Home button service", "HomeKeyService" in services, services.strip())
+        try_tv("input keyevent KEYCODE_HOME; sleep 4", 15)   # here Home only appears when the Home button asks for it
+    else:
+        owner = try_tv(HOME_Q, 20).strip().splitlines()
+        check("Home owner", bool(owner) and owner[-1].startswith(HOME), owner[-1] if owner else "no answer")
     check("Home on screen", HOME in focus(), focus())
     if verified:
         check("voice setting kept", "katniss" in try_tv("settings get secure voice_interaction_service", 15))

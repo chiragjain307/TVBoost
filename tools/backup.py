@@ -50,6 +50,10 @@ def main():
         "launcher_version": version.group(1) if version else None,
         "private_dns_mode": tv("settings get global private_dns_mode").strip(),
         "private_dns_specifier": tv("settings get global private_dns_specifier").strip(),
+        "notification_listeners": tv("settings get secure enabled_notification_listeners").strip(),
+        "accessibility_services": tv("settings get secure enabled_accessibility_services").strip(),
+        "accessibility_enabled": tv("settings get secure accessibility_enabled").strip(),
+        "touch_exploration": tv("settings get secure touch_exploration_granted_accessibility_services").strip(),
         "enabled": packages("-e"),
         "disabled": packages("-d"),
     }
