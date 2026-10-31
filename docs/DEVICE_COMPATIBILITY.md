@@ -20,8 +20,11 @@ opens the new launcher.
 |---|---|---|---|
 | TCL 55T89C | `UTT2.250416.001 AU02` | 14 (SDK 34), Google TV | Install in about two minutes including a restart, with nothing disabled. After each restart the launcher came up by itself in about 33 seconds. Both designs, logo and no logo, Inputs (HDMI 1 to 4), RAM and storage tile, automatic location, ad blocking and undo all worked. The Home button opened the launcher from an app, from Settings and from a TV input |
 
-Not tested on that TV yet: the remote's app buttons. Undo was checked by comparing every app, setting and Home entry with a snapshot taken
-first, and again after a restart.
+The remote's buttons were sent over ADB as the same key codes, and they behaved as on the stock TV: YouTube, guide, Inputs, voice and quick
+settings. AirPlay stayed available. The install also passed from a fresh clone using the published release. Undo was checked by comparing every app,
+setting and Home entry with a snapshot taken first, and again after a restart.
+
+Google's launcher stays on this route, so it keeps its memory, about 100 MB on that TV. The memory savings in the README come from the verified box.
 
 ## Unverified
 

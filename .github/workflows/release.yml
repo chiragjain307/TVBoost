@@ -23,4 +23,8 @@ jobs:
         run: |
           version=$(cat VERSION)
           awk '/^## /{n++} n==1' CHANGELOG.md | tail -n +2 > notes.md
-          gh release create "v$version" release-files/*.apk --target main --title "TVBoost $version" --notes-file notes.md
+          if gh release view "v$version" >/dev/null 2>&1; then
+            gh release edit "v$version" --notes-file notes.md
+          else
+            gh release create "v$version" release-files/*.apk --target main --title "TVBoost $version" --notes-file notes.md
+          fi
