@@ -67,18 +67,23 @@ highlight glides instead of snapping. These numbers are for Design 1 with 7 apps
 | **Stock Home, before** (thumbnails blurred) | **Settings still work** |
 | ![Stock home screen](assets/screenshots/i96-8k/i96-8k-stock-home-blurred.jpg) | ![Settings panel](assets/screenshots/i96-8k/i96-8k-settings-v1.0.jpg) |
 
-All screenshots come from a real box. "YOUR LOGO" is a sample used only for these pictures. If you give no logo, that space stays empty.
+All screenshots come from real devices. "YOUR LOGO" is a sample used only for these pictures. If you give no logo, that space stays empty.
 
 ## Compatibility
 
 | Level | Devices | What you get |
 |---|---|---|
 | **Verified** | <img src="devices/i96-8k-hi3798mv300/box.jpg" width="110" alt="I96 8K retail box"><br>I96 8K, firmware `I96_8K-20251222-301SMSX300` | Everything, including the tested debloat profile |
+| **Tested, universal mode** | TCL 55T89C, Google TV on Android 14 | Launcher, both designs, your logo, Inputs button, ad blocking and undo. Nothing is disabled: Google's launcher stays, and the Home button opens TVBoost. Restarting the TV has not been tested yet |
 | **Universal, untested** | Other Android TVs and boxes on Android 8 or newer with ADB access | Launcher, designs, your logo, ad blocking and undo. No debloat |
 | **Not supported** | Samsung Tizen, LG webOS, Roku | These do not run Android |
 
-Universal mode has only been tested on the verified box so far. Android 11+ devices can need ADB pairing first, and some brands make it
-harder to replace Home. If you try another device, please [report what happened](../../issues), so it can be added here. Better still,
+![TVBoost on a TCL Google TV](assets/screenshots/tcl-55t89c/tcl-55t89c-home.jpg)
+
+Universal mode has been tested on the verified box and on one branded TV so far, a TCL running Google TV. On Google TV the installer disables
+nothing, because the setup wizard would take over Home and turning that off can delete the saved Wi-Fi network. Instead Google's launcher stays,
+and the Home button opens TVBoost. Android 11+ devices can need ADB pairing first, and some brands make it harder to replace Home. If you try
+another device, please [report what happened](../../issues), so it can be added here. Better still,
 [add a device profile](devices/README.md).
 
 ## Install
@@ -143,9 +148,11 @@ The launcher has no internet permission in any design. Design 2 installs a separ
 screen and no background service, and it asks [Open-Meteo](https://open-meteo.com/) for the temperature, at most every 30 minutes, and only while the
 welcome screen is showing. Sunrise and sunset are calculated on the device.
 
-Nobody sets a location. Each device works out its own the first time the welcome screen opens, and again once a day: it uses Android's location if
-the device has one, and most TVs do not, so otherwise it asks [ipapi.co](https://ipapi.co/) where its internet connection is. That service sees the
-device's public IP address, and it can be off by a nearby city. Pass `--city <name>` to `install.sh` or `design.sh` to fix the city if it is wrong. Open-Meteo's free service is for
+Nobody sets a location. Each device works out its own the first time the welcome screen opens, and again once a day, by asking
+[ipapi.co](https://ipapi.co/) where its internet connection is. That service sees the device's public IP address, and it can be off by a nearby city.
+The helper tries Android's own location first, but Android does not give that to a background helper like this one, so in practice the internet
+connection decides: on the tested Android 14 TV, Android refused and the city still came out right. Pass `--city <name>` to `install.sh` or
+`design.sh` to fix the city if it is wrong. Open-Meteo's free service is for
 non-commercial use, so check its terms before using this in a business.
 
 The RAM and storage tile updates only while Home is on screen. It reads storage from the system's `df` tool, because one tested box reports

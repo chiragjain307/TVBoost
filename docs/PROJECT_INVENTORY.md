@@ -34,7 +34,7 @@ build, and optional parts can be turned off.
 | `tools/device_match.py` | Match a box to a profile, or refuse | Shared |
 | `tools/backup.py` | Recovery manifest before each install | Shared |
 | `tools/choose_apps.py` | Ask which apps to keep before anything is disabled | Shared |
-| `tools/profile.py` | Name for the welcome screen, kept on this computer, and the optional `--city` lookup | Optional |
+| `tools/profile.py` | Name for the welcome screen, kept on this computer, the optional `--city` lookup, and the stock launcher that stays Home | Optional |
 | `tools/common.sh` | Find the device's ADB port | Shared |
 | `tools/recovery.py`, `tools/disable.sh`, `tools/restore.sh` | Undo record, guarded disabling, restoring | Shared |
 | `tools/check.py` | Find what a firmware update changed | Shared |

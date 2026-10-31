@@ -44,6 +44,7 @@ picture of a design is stored here.
 |---|---|
 | `assets/branding/sample-logo.png` | Neutral placeholder for screenshots and tests |
 | `devices/i96-8k-hi3798mv300/box.jpg` | Cropped photo of the retail box, with location data removed |
+| `assets/screenshots/tcl-55t89c/tcl-55t89c-home.jpg` | Real screenshot of Design 2 on a TCL Google TV, with the sample logo |
 
 ## Fonts and icons
 
