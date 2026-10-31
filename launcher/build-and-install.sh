@@ -149,6 +149,8 @@ if ! printf '%s' "$START_OUT" | grep -qF 'Status: ok' || printf '%s' "$START_OUT
   echo "ERROR: the new launcher did not start (see above); $STOCK_LAUNCHER was left enabled." >&2
   exit 1
 fi
+# Android withdraws notification access from a disabled app, so a rollback has to ask for it back.
+LISTENERS=$("$PY" -I ../tools/tv.py 'settings get secure enabled_notification_listeners' 2>/dev/null | tail -n 1 | tr -d '\r' || true)
 if [ "$STOCK_STAYS_HOME" = 1 ]; then SET_HOME="echo stock launcher stays Home"
 else SET_HOME="cmd package set-home-activity --user 0 com.tvboost.home/.MainActivity"; fi
 printf '%s\n' \
@@ -173,6 +175,12 @@ rollback_home() {
     return 1
   fi
   "$PY" -I ../tools/tv.py "pm enable --user 0 $STOCK_LAUNCHER" >/dev/null 2>&1 || true
+  case "$LISTENERS" in
+    ''|null) ;;
+    *) for item in $(printf '%s' "$LISTENERS" | tr ':' ' '); do
+         "$PY" -I ../tools/tv.py "cmd notification allow_listener $item" >/dev/null 2>&1 || true
+       done ;;
+  esac
   # set-home-activity needs pkg/activity on Android 9, so resolve the component on the TV first.
   "$PY" -I ../tools/tv.py "cmd package set-home-activity --user 0 \$(cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME $STOCK_LAUNCHER | tail -n 1)" >/dev/null 2>&1 || true
   BACK=$(query_home)

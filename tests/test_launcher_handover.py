@@ -79,6 +79,8 @@ def run(command):
         if state["stock_disabled"] and state["home"] == STOCK:
             return "android\n"
         return state["home"] + "\n"
+    if "settings get secure enabled_notification_listeners" in command:
+        return state.get("listeners", "null") + "\n"
     return ""
 
 
@@ -212,6 +214,11 @@ class HandoverTest(unittest.TestCase):
         self.assertIn("setupwraith", result.stderr)
         self.assertFalse(state["stock_disabled"])
         self.assertIsNone(self.record())
+
+    def test_rollback_asks_for_notification_access_back(self):
+        result, state = self.handover(set_home_fails=True, listeners="com.example/.Listener")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("cmd notification allow_listener com.example/.Listener", state["commands"])
 
     def test_stock_launcher_that_stays_home_is_left_alone(self):
         result, state = self.handover(stays=True)

@@ -13,7 +13,7 @@ First public release.
 - One-command install with a dry-run mode, and firmware matching that refuses unverified boxes
 - Universal mode for other Android 8+ devices: launcher, design and DNS, no debloat
 - Google TV support: nothing is disabled, the stock launcher stays, and the Home button opens the launcher
-- `--no-reboot`, for devices where network debugging may not survive a restart
+- `--no-reboot`, for devices where network debugging does not survive a restart
 - Backup before every install, and one-command undo
 - A short health check after each install
 - Saved designs that switch in seconds: `01-navy-gold` and `02-liquid-glass`
@@ -31,7 +31,7 @@ First public release.
 **Known issues**
 
 - Automatic location comes from the internet connection, and it found the right city on both tested devices. It can be off by a nearby city. Android does not give its own location to a background helper, so that path does not help on the tested Android 14 TV
-- On Google TV, restarting the TV and the remote's app buttons have not been tested yet
+- On Google TV, the remote's app buttons have not been tested yet
 - Installing or switching a design restarts Home, which takes the screen from any app that is playing
 - On the I96 8K, a restart command froze twice and needed a power cycle, and twice the box dropped off the network during app installs and reset itself. The cause was not found.
 - On the I96 8K, about 1 KB still goes to the vendor's server at each boot. The sender was not found.

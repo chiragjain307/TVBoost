@@ -74,7 +74,7 @@ All screenshots come from real devices. "YOUR LOGO" is a sample used only for th
 | Level | Devices | What you get |
 |---|---|---|
 | **Verified** | <img src="devices/i96-8k-hi3798mv300/box.jpg" width="110" alt="I96 8K retail box"><br>I96 8K, firmware `I96_8K-20251222-301SMSX300` | Everything, including the tested debloat profile |
-| **Tested, universal mode** | TCL 55T89C, Google TV on Android 14 | Launcher, both designs, your logo, Inputs button, ad blocking and undo. Nothing is disabled: Google's launcher stays, and the Home button opens TVBoost. Restarting the TV has not been tested yet |
+| **Tested, universal mode** | TCL 55T89C, Google TV on Android 14 | Launcher, both designs, your logo, Inputs button, ad blocking and undo. Nothing is disabled: Google's launcher stays, and the Home button opens TVBoost. It comes back by itself after a restart |
 | **Universal, untested** | Other Android TVs and boxes on Android 8 or newer with ADB access | Launcher, designs, your logo, ad blocking and undo. No debloat |
 | **Not supported** | Samsung Tizen, LG webOS, Roku | These do not run Android |
 

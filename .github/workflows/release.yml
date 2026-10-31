@@ -1,0 +1,26 @@
+name: Publish release
+# The APKs are signed on the maintainer's computer and tested on real devices, so a release ships those exact files
+# rather than a fresh build. Pushing them to the temporary release-files branch publishes them, once they match
+# launcher/RELEASE.sha256. Delete the branch afterwards.
+on:
+  push:
+    branches: [release-files]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The files match the hashes in the repository
+        working-directory: release-files
+        run: sha256sum -c ../launcher/RELEASE.sha256
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(cat VERSION)
+          awk '/^## /{n++} n==1' CHANGELOG.md | tail -n +2 > notes.md
+          gh release create "v$version" release-files/*.apk --target main --title "TVBoost $version" --notes-file notes.md

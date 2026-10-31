@@ -42,8 +42,7 @@ else
   tv "settings put global private_dns_mode $mode"
 fi
 tv "pm uninstall com.tvboost.home; pm uninstall com.tvboost.helper" >/dev/null
-# Android rewrites its list of notification apps just after an uninstall, and on Google TV that left the list
-# empty. So wait for that, write the saved values back, and read each one to be sure it stayed.
+# Android cleans up its accessibility lists just after an uninstall, so wait for that before writing them back.
 sleep 5
 put_back() {   # <name in the backup> <secure setting>
   [ -f "$backup" ] || return 0
@@ -60,10 +59,18 @@ put_back() {   # <name in the backup> <secure setting>
   done
   echo "could not put back $2: set it to '$value'" >&2
 }
-put_back notification_listeners enabled_notification_listeners
 put_back accessibility_services enabled_accessibility_services
 put_back accessibility_enabled accessibility_enabled
 put_back touch_exploration touch_exploration_granted_accessibility_services
+# Android withdraws notification access from a disabled app. Only Android's own list counts: the setting of the same
+# name is a copy of it, so writing that changes nothing and the next restart empties it.
+if [ -f "$backup" ]; then
+  listeners=$("$PY" -I -c "import json; print(json.load(open('$backup')).get('notification_listeners', ''))")
+  case "$listeners" in
+    ''|null) ;;
+    *) for item in $(printf '%s' "$listeners" | tr ':' ' '); do tv "cmd notification allow_listener $item" >/dev/null; done ;;
+  esac
+fi
 rm -f "$stays"
 tv "cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME | tail -n 1; settings get global private_dns_mode"
 echo "undo finished. Reboot the box once to settle it."

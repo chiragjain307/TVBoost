@@ -18,10 +18,10 @@ opens the new launcher.
 
 | Device | Firmware build | Android | Result |
 |---|---|---|---|
-| TCL 55T89C | `UTT2.250416.001 AU02` | 14 (SDK 34), Google TV | Install in about 70 seconds with nothing disabled. Both designs, logo and no logo, Inputs (HDMI 1 to 4), RAM and storage tile, automatic location, ad blocking and undo all worked. The Home button opened the launcher from an app, from Settings and from a TV input |
+| TCL 55T89C | `UTT2.250416.001 AU02` | 14 (SDK 34), Google TV | Install in about two minutes including a restart, with nothing disabled. After each restart the launcher came up by itself in about 33 seconds. Both designs, logo and no logo, Inputs (HDMI 1 to 4), RAM and storage tile, automatic location, ad blocking and undo all worked. The Home button opened the launcher from an app, from Settings and from a TV input |
 
-Not tested on that TV yet: restarting it with the launcher installed (run with `--no-reboot`), and the remote's app buttons. Undo was checked by
-comparing every app, setting and Home entry with a snapshot taken first.
+Not tested on that TV yet: the remote's app buttons. Undo was checked by comparing every app, setting and Home entry with a snapshot taken
+first, and again after a restart.
 
 ## Unverified
 

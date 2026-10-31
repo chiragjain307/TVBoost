@@ -94,7 +94,7 @@ def reboot_timed(home):
     t_boot = time.time()
     t_home, resumed = None, ""
     while time.time() - t_boot < 180:
-        resumed = try_tv("dumpsys activity activities | grep mResumedActivity")
+        resumed = try_tv("dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity'")
         if home in resumed:
             t_home = time.time()
             break
